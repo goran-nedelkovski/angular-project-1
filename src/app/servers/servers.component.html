@@ -1,0 +1,53 @@
+ 
+<!-- <label>Server name</label> -->
+<!--Event binding ()=> 
+(event)="ts expression, usualy function($event obj for fetch or get the event's data)"-->
+<!-- <input type="text" class="form-control" (input)="onUpdateServerName($event)"> -->
+
+<!--Two-way data binding [()]-->
+<!--to be able to use ngModel, we must import FormsModule from @angular/forms module/pck (should be there by default in a cli project)
+two-way data binding uses both direction: 1.(event)bindig when we trigger our input event(in html) and update the value of the property automaticaly(in ts code)
+and 2.property binding, when if we change the property' value(in ts code), then automaticalu will change the value of the input el(in html)-->
+<!-- <input type="text" class="form-control" [(ngModel)]="serverName"> -->
+<!-- <p>{{serverName}}</p> -->
+<!--($event) object as parameter, to fetch the event's data-->
+<!--($event) as parameter is reserved variable that we can use in the template when we use event binding-->
+<!--$event is the data emitted by that event-->
+<!--$event is reseved var name, thatg give to us access to that event's data-->
+<!--(input) event, when user type something as input-->
+
+<!--Property binding []-->
+<!-- <button class="btn btn-primary" (click)="onCreateServer()" [disabled]="!allowedNewServer">add server</button> -->
+<!-- <p [innerText]="allowedNewServer"></p>  //1st way.we can do like this with prperty binding -->
+<!--or 2nd way.we can use srting interpolation,and its same: <p>{{allowedNewServer}}</p> -->
+<!--to make this disabled dinamic, then put disable in [] -> property binding..dinamicaly bind some property(in this case, our attribute-property disabled we bind with the .ts property "allowdNewserver" dinamicaly)-->
+<!--our attribute-property disabled we bind with the .ts property "allowdNewserver" dinamicaly), and when allowedNewServer changes, then [disable] becames => enable dinamicaly-->
+<!--when do I use {{}} and when property binding? 1.if i want to print some text, then use String Interpolation {{}}, and 2.if I want to change some property or directive or component, then use property Binding-->
+<!--dont mix both-->
+<!--Event binding => (event)="ts expression, usualy function()"-->
+<!-- <p>{{serverCreationStatus}}</p> -->
+
+<!--*ngIf is a Structural Directive, structural -> it changes the structure of the Dom t.e. add or not add the p element in the dom-->
+<!--If serverCreated is true (it remember the last set value of this property, the last re-asign value (true))-->
+<!-- <p *ngIf="serverCreated; else noServer">Server was created, server name is {{serverName}}</p> -->
+<!--else block with #-local Reference and ng-template => to mark some spot/place of the template that we want to show conditionaly(t.e. to mark noSeerver variable with #, and in thatg place will be render this ng-template)-->
+<!-- <ng-template #noServer>
+    <p>No server was created</p>
+</ng-template> -->
+<!-- <app-server></app-server> -->
+<!-- <app-server></app-server>  -->
+<!--we can multiple these, because components are re-usable(we can use component many times with this selector)-->
+
+<!--attribute directives(like normal html attribute) =>they unlike structural directibves don't change thge structure of the page(t.e. dont added or remove el on the page), but they only changes the element they were placed on-->
+<!-- <p [ngStyle]="{backgroundColor: getColor()}" [ngClass]="{online: serverStatus === 'online'}">{{ 'Server' }} with ID {{serverId}} is {{getServerStatus()}}</p>   -->
+<!--work with property binding[].[] are not part of the directive, but with [] we want to bind some property on this directive (Property binding), and property name happens to ngStyle-->
+<!--with ngStyle we want to dinamicaly update the styles(dinamicaly asign a style), t.e. dinamicaly set the backColor to green or red, based on the serverStatus-->
+
+<!--Applying CSS Classes Dynamically with ngClass => dinamicaly added or remove css classes-->
+<!--also work with Property binding [], so [ngClass]="{keys: values}" and keys=> would be class name and values=> would be the condition, when that class will be attached or not to that p element (so if its condition i true(online),then attach this class .online to the p element)-->
+
+<!--outputting lists with *ngFor =>also structural directive for dinamicaly added element from some array-->
+<!-- <p *ngFor="let server of servers; let i = index">
+    {{i}}{{server}}
+</p>
+Getting the Index with *ngFor => ; let i = index and ouputing that i with {{}} in each iteration -->
