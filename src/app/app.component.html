@@ -1,5 +1,5 @@
 <!--here above the container(above the main content) will be renred heared component
-//here in the parent app.comp in this app-header tag selector I will listen our own featureSelected event (created from the child header comp)-->
+//5.here in the parent app.comp in this app-header tag selector I will listen our own featureSelected event (created from the child header comp)-->
 <app-header (featureSelected)="onNavigate($event)">
 </app-header>
 <!--with $event obj as argumet, I want to access to the event's data(to the data that the event emmit to us)-->
@@ -7,7 +7,7 @@
   <div class="row">
     <div class="col-md-12">
       <!--here in the main content will be renred these 2 components 
-      //if loadfeature === 'recipe', then will be displayed app-recipe component, and if loeadfeat ==shopp-lis , then will be displaye d app-shop component-->
+      //7.if loadfeature === 'recipe', then will be displayed app-recipe component, and if loeadfeat ==shopp-lis , then will be displaye d app-shop component-->
       <app-recipes *ngIf="loadedFeature === 'recipe'"></app-recipes>
       <app-shopping-list *ngIf="loadedFeature !== 'recipe'"></app-shopping-list>
     </div>
