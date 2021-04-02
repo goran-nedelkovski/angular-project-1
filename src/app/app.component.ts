@@ -12,10 +12,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   // name = 'Goki'; //Data binding (communication between .ts code(our business logic) and .html template)
-
-
-
-
+  loadedFeature = 'recipe';  //global var, where we can store the feature.it can be 'recipe' initialy
+  //here in onNavigate(), I will received as parameter, where we should navigate that informations/data from the event
+  onNavigate(feature:string) { //we expect to receaive some feature:string as data emitting from the event
+    this.loadedFeature = feature;
+  }
 }
 //add Bootstrap (so we don't manualy write css styles)
 //1st-> npm install --save bootstrap@3
