@@ -2,9 +2,23 @@
 <!--In this resipe comp, I want that 2 nested components to be next to each other (side by side to be rendered)-->
 <div class="row">
     <div class="col-md-5">
-        <app-recipes-list></app-recipes-list>
+        <!--9.(2nd way)->in our main recipe comp, bind/listen to our own event(2nd event) and store it to some property-->
+        <!-- <app-recipes-list (recipeWasSelected)="selectedRecipe = $(event)"></app-recipes-list>-->
+        <!--9.in our main recipe comp, bind/listen to our own event(2nd event) and call this method with $event value(btw $event will get event's data and that is clicked recipe), and this value ($event=recipe) will send to the function definition in parameter recipe:Recipe in the ts code, and it will be stored in some own property there -->
+        <app-recipes-list (recipeWasSelected)="onSelectedRecipe($event)"></app-recipes-list>
+        <!--.we will asign a value $event to that property selectedRecipe here in the template(not in the .ts code) where event occur (in that property I want to store my own event, and of course I could store in a method selectedrecipe($event))-->
+        <!--.$with $event value obj, we catch/get the own custom event's data (t.e. we catch the recipe), and store the event's data in thatg property ($event refer/point to the data that we pass with that own event)-->
     </div>
     <div class="col-md-7">
-        <app-recipes-detail></app-recipes-detail>
+        <!--11.now we can pass this information here in recipe-detail comp,
+        first check if selectedRecipe property is set with *ngIf, and if selectedResipe is set, then display it in this component-->
+        <app-recipes-detail *ngIf="selectedRecipe;else infoText" [recipe]="selectedRecipe"></app-recipes-detail>
+        <!--12.final step, lets pass selectRecipe to recipe-detail comp.For that, we must create/add some own property in recipe-detail comp
+        12.this recipe-detail will be render on the Dom, only if the condition is true(if its not undefined)-->
+        <!--else (if its not set), then write some dummy text in ng-template with local Reference variable #infotext.in this local Ref var will be store all ng-template code-->
+        <ng-template #infoText>
+            <p>Please select a Recipe</p>
+        </ng-template>
+        
     </div>
 </div>

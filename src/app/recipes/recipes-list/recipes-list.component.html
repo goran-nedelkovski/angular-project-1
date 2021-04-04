@@ -22,7 +22,10 @@
         <!--1.cut the commented code and paste into the recipe.item comp.then remove ngFor from there and put here in app-recipe-item selectpr tag (so all item component will replicate here for each recipe)-->
         <app-recipes-item 
         *ngFor="let recipeEl of recipes"
-        [recipe]="recipeEl"></app-recipes-item>
+        [recipe]="recipeEl"
+        (recipeSelected)="onRecipeSelected(recipeEl)"></app-recipes-item>
+        <!--4.bind our own Custom event here in 1st parent recipe-list comp,
+        ////5.here in this method we need some extra info, which recipe was selected, so we pass recipeEl as parameter from ngFor (instead of $event to ccess the event;s data)-->
     <!--3.bind that child Custom porperty here in this parent comp, in direcive[] t.e. [childCustom Property]="parent property" (t.e. binding cild custom property recipe with recipeEl variable of each iteracion )-->
     </div>
 </div>
