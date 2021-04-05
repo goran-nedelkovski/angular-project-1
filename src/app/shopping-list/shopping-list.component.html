@@ -1,7 +1,8 @@
 <!-- <p>shopping-list works!</p> -->
 <div class="row">
     <div class="col-xs-10">
-        <app-shopping-edit></app-shopping-edit>
+        <!--7.in parent shop-list comp I listen that custom event and execute this method with $event as argument-value($event will get the event;s data(ingredient) and that value will send to the ts method definition)-->
+        <app-shopping-edit (ingredientAdded)="onIngredientAdded($event)"></app-shopping-edit>
         <hr>
         <ul class="list-group">
             <a href="#" class="list-group-item" style="cursor: pointer;" *ngFor="let ingredient of ingredients">

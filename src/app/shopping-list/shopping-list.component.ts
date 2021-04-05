@@ -16,5 +16,10 @@ export class ShoppingListComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  //8.implement that method here in ts comp, where we expect to receive the Igredient from $event, so as parameter I wourl write ingredient:ingredient (I know that I will receive Ingredient obj, because that data was send/pass from the event emit(Ingredient obj))
+  onIngredientAdded(ingredient:Ingredient) {
+    //9.final, push my new ingredient obj to the Ingredients[] array
+    this.ingredients.push(ingredient);
+  }
 
 }
