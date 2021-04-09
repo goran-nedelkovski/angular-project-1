@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from './recipes.model';
+import { RecipesService } from './recipes.service';
 
 @Component({
   selector: 'app-recipes',
   templateUrl: './recipes.component.html',
-  styleUrls: ['./recipes.component.css']
+  styleUrls: ['./recipes.component.css'], 
+  //5.lets first provide the RecipeService in the recipe.comp.ts
+  providers: [RecipesService] //So all childs components of recipes parent comp will use this same instance of this Service Class (but only they will use this same instance, not Shopping-list components)
+//6.Now, lets use RecipeServise in recipe-list component
 })
 export class RecipesComponent implements OnInit {
 //.store my own custom event in some property (in the main parent recipes comp)

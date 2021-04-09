@@ -15,3 +15,6 @@ export class DropdownDirective {
 }
 //6.to can use it this directive, we must include it in app.module.ts
 //7. now I can use our Directive in recipe-detail.comp.html to the div.btn-group and in header.html in li.dropdown element
+
+
+
