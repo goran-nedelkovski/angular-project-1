@@ -1,3 +1,4 @@
+import { EventEmitter, Output } from '@angular/core';
 import { Recipe } from './recipes.model';
 // Instead of adding a service class to the providers[]  array in AppModule , you can set the following config in @Injectable() :
 // @Injectable({providedIn: 'root'})
@@ -7,6 +8,8 @@ import { Recipe } from './recipes.model';
 //1.lets create(manualy) a recipes.service.ts in the recipes folder (service file should be in the folder with that features, next to the component's files )
 //1.Service is a normal ts Class (no need of Decorator, unless @Injectable() if we plan to inject a service into this service)
 export class RecipesService {
+//1''here I will add a new property (public), which will be my own Custom Event (So, I only add this in my Service.then emit this event in onSelected() in recipe-item comp).
+   @Output() recipeSelected = new EventEmitter<Recipe>();//emit event's data of type Recipe (this property will hold Recipe) 
 //Recipe service is the place where we manage our recipes
 //2.copy/cut recipes[] array from RecipesList comp and make it private here (so to cant access from outside) 
     private recipes:Recipe[] = [
@@ -20,6 +23,7 @@ export class RecipesService {
         return this.recipes.slice(); //we can create a copy of the array with slice() and with that slice() method we return a new array which is copy of the original array (and with that we can't access to the original private array from outside, but we only get the copy)
     //(from javaScript-primitive type(variables) and reference type(Objects, arrays))
     }
+
 
 }
 //5.we should add our both Services to a place when we can provide them. So, we could add them in app.module.ts, but lets first provide the RecipeService in the recipe.comp.ts for now
