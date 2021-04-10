@@ -12,6 +12,7 @@ import { RecipesItemComponent } from './recipes/recipes-list/recipes-item/recipe
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { DropdownDirective } from './shared/dropdown.directive';
+import { ShoppingListService } from './shopping-list/shopping-list.service';
 //import { ServerComponent } from './server/server.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //import { ServersComponent } from './servers/servers.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //angular is split (contain) of many modules/packages(re-usable piece of code in a separate file), and if we want to use some features of that modules/packages, simpli do here with import {} in app.modules.ts 
@@ -34,7 +35,7 @@ import { DropdownDirective } from './shared/dropdown.directive';
     BrowserModule,  //BrowserModule is build-in Module, to can start our app on the Browser
     FormsModule
   ],
-  providers: [],
+  providers: [ShoppingListService],
   bootstrap: [AppComponent]  //starts our application by this root component, (which component will be recognize in the index.html file? => AppComponent)
 })
 export class AppModule { }
