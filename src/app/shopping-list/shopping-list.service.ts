@@ -1,5 +1,6 @@
-import { EventEmitter, Output } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Ingredient } from '../shared/ingredient.model';
+@Injectable({providedIn:'root'})
 //1.lets create(manualy) a shopping-list.service.ts in the shopping-list folder (service file should be in the folder with that features, next to the component's files, best practice )
 export class ShoppingListService {
 ///9'''(..A-B lecture)add/create a own event here in the Service (we could also remove slice() for getting the original array..but I will go with the second solution: with own event)

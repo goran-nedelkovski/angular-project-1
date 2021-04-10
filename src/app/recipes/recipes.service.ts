@@ -1,5 +1,6 @@
-import { EventEmitter, Output } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Recipe } from './recipes.model';
+@Injectable({providedIn: 'root'})
 // Instead of adding a service class to the providers[]  array in AppModule , you can set the following config in @Injectable() :
 // @Injectable({providedIn: 'root'})
 // export class MyService { ... }
