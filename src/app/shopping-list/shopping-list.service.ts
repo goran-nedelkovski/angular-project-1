@@ -22,5 +22,15 @@ private ingredients:Ingredient[] = [
     //10'''(..A-B lecture) here whenever we changed our array(whenever change array with new ingredient added), simply call our own event.emit(copy of our array, not the oriiginal)
     this.ingredientsChanged.emit(this.ingredients.slice());//simply call our own event.emit(copy of our array, not the oriiginal)
     }
+//8.(lecture123)Here I will add new method addInghredients(here I expect to receive our list of ingredients)
+    addIngredients(ingredients:Ingredient[]) {
+        //1st way (better way) is to direcly add all ingredients objects(unpacking list of ingredients objects with spread operator(...)) and then emit our own event (and pass a copy of the array with slice) (go to recipes service)
+        this.ingredients.push(...ingredients);
+        this.ingredientsChanged.emit(this.ingredients.slice());
+        //2nd way is like this:
+        // for(let ingredient of ingredients) {
+        //     this.addIngredient(ingredient);
+        // }
+    }
 //So, basicaly everything(every busines logic from the component is replace here in the service)
 }

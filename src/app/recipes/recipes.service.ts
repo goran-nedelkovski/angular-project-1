@@ -1,4 +1,6 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Ingredient } from '../shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Recipe } from './recipes.model';
 @Injectable({providedIn: 'root'})
 // Instead of adding a service class to the providers[]  array in AppModule , you can set the following config in @Injectable() :
@@ -14,15 +16,37 @@ export class RecipesService {
 //Recipe service is the place where we manage our recipes
 //2.copy/cut recipes[] array from RecipesList comp and make it private here (so to cant access from outside) 
     private recipes:Recipe[] = [
-        new Recipe('A Test Recipe', 'This is simply a test', 'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg'),
-        new Recipe('Another Test Recipe', 'This is simply a test', 'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg')
+        new Recipe('Tasty Snitzel',
+         'This is simply a test',
+          'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
+          [
+        //2''''add here in recipes[], add [] of some new Ingredien() in both (then go to repipes-detail comp)
+              new Ingredient('Meat', 1),
+              new Ingredient('French Fries', 20)
+          ]),
+        new Recipe('Big fat Burger',
+         'This is simply a test', 
+         'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
+         [
+            new Ingredient('Buns', 2),
+            new Ingredient('Meat', 1)
+         ])
     ];   //of type Recipe array t.e. array of Recipes t.e. array of Recipe objects t.e. [{Recipe obj1},{Recipe obj 2 },...
-//3.we can add/create getRecipes() method(public API) which can access to the private recipes[] (and here we can access to this method from outside and trough this method we can indirectly access to the private recipes[])
+//7.(lecture 123)Here we can inject ShopList service in the constrctor()
+    constructor(private slService:ShoppingListService) {}
+    //3.we can add/create getRecipes() method(public API) which can access to the private recipes[] (and here we can access to this method from outside and trough this method we can indirectly access to the private recipes[])
     getRecipes() {
     //with this.recipes we return a direct reference to the array
     //4.because array are objects of reference type (from javaScript-reference type lecture), we can create a copy of the array with slice() and with that slice() method we return a new array which is copy of the original array (and with that we can't access to the original private array from outside, but we only get the copy)
         return this.recipes.slice(); //we can create a copy of the array with slice() and with that slice() method we return a new array which is copy of the original array (and with that we can't access to the original private array from outside, but we only get the copy)
     //(from javaScript-primitive type(variables) and reference type(Objects, arrays))
+    }
+//4.(lecture 123)Add this method in this Recipes service
+    getIngredientsToShoppingList(ingredients:Ingredient[]) {
+//6.(lecture 123)Here we need to access to the Shoppinglist service.So add @Injectable() when we add service into service
+       //7.(lecture123)access-rich here to the service here in the method (go to slService and add new method addIngredients() and after that come back here in recipes Service)
+       //9.(lecture123) access to addIngredients() from shService here in Recipe service  
+       this.slService.addIngredients(ingredients);
     }
 
 

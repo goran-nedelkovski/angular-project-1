@@ -16,7 +16,8 @@
         <div class="btn-group" appDropdown>
             <button type="button" class="btn btn-primary dropdown-toggle">Manage Recipe <span class="caret"></span></button>
             <ul class="dropdown-menu">
-                <li><a href="#">To Shopping List</a></li>
+    <!--1(lecture 123)in recipe-derail in li>a link add click listener-->
+                <li><a (click)="onAddToShoppingList()" style="cursor: pointer;">To Shopping List</a></li>
                 <li><a href="#">Edit Recipe</a></li>
                 <li><a href="#">Delete Recipe</a></li>
             </ul>
@@ -30,6 +31,12 @@
 </div>
 <div class="row">
     <div class="col-xs-12">
-        Ingredients
+<!--3''''.here I want to output the Ingredients in ul>li, and this li will replicate, so I can use *ngFor loop for loop all ingredient el of that arr and output them-->
+        <ul class="list-group">
+            <li class="list-group-item"
+            *ngFor="let ingredient of recipe.ingredients">
+            {{ingredient.name}}-{{ingredient.amount}}
+        </li>
+        </ul>
     </div>
 </div>
