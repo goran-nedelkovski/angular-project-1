@@ -8,13 +8,14 @@
     <div class="col-md-12">
       <!--here in the main content will be renred these 2 components 
       //7.if loadfeature === 'recipe', then will be displayed app-recipe component, and if loeadfeat ==shopp-lis , then will be displaye d app-shop component-->
-      <app-recipes *ngIf="loadedFeature === 'recipe'"></app-recipes>
-      <app-shopping-list *ngIf="loadedFeature !== 'recipe'"></app-shopping-list>
+      <!-- <app-recipes *ngIf="loadedFeature === 'recipe'"></app-recipes>
+      <app-shopping-list *ngIf="loadedFeature !== 'recipe'"></app-shopping-list> -->
+
+     <!--8.here with <router-outlet> we mark the place where angular Router will load/display/render the component(page) depend on the currently active route/path that we added(instead 2nd approuch with selector tags(like commented code above))--> 
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
-
-
 
 
 
