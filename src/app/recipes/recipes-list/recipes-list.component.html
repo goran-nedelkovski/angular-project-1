@@ -24,9 +24,11 @@
         *ngFor="let recipeEl of recipes"
         [recipe]="recipeEl"
         (recipeSelected)="onRecipeSelected(recipeEl)"></app-recipes-item> -->
+<!--3.(163)Bind our own child(custom)property here in the recipes-list(parent), bind with i (the index of the recipes[], so in *ngFor add: let i = index; to output the current index of each iteration)-->
         <app-recipes-item 
-        *ngFor="let recipeEl of recipes"
-        [recipe]="recipeEl"></app-recipes-item>
+        *ngFor="let recipeEl of recipes; let i=index"
+        [recipe]="recipeEl"
+        [id]="i"></app-recipes-item>
         <!--4'' remove that event listener in recipe-list.html-->
         <!--4.bind our own Custom event here in 1st parent recipe-list comp,
         ////5.here in this method we need some extra info, which recipe was selected, so we pass recipeEl as parameter from ngFor (instead of $event to ccess the event;s data)-->

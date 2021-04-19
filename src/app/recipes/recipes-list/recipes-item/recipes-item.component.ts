@@ -11,6 +11,8 @@ import { RecipesService } from '../../recipes.service';
 export class RecipesItemComponent implements OnInit {
   //2.now because we don't have recipeEl any more in our recipe.item.html comp, so add/create own Custom Property recipe (of type Recipe model class) with @Input(), so be accessibla/bindiable from outside(from parent, from recipe-list comp)
   @Input() recipe:Recipe;
+  //2(163)//create id property here in this comp with @Input, and bind this child property in the recipes-list component(parent)
+  @Input() id:number;
   // @Output('selectedRecipe') selectedRecipe = new EventEmitter<{name:string, description: string, imagePath: string}>();
   //2.create/add my own Custom event recipeselected, that I will emit in onSelected() method
   //@Output() recipeSelected = new EventEmitter<void>(); //EventEmitter here won't pass any informations, so type is void (return nothing)(don;t contain any informations)
