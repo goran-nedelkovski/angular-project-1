@@ -17,9 +17,10 @@
             <button type="button" class="btn btn-primary dropdown-toggle">Manage Recipe <span class="caret"></span></button>
             <ul class="dropdown-menu">
     <!--1(lecture 123)in recipe-derail in li>a link add click listener-->
+    <!--2.(159)-//Remove href(to avoid reload the page) also on these links ad add attribute style="cursor:poniter" on the 3 links-->       
                 <li><a (click)="onAddToShoppingList()" style="cursor: pointer;">To Shopping List</a></li>
-                <li><a href="#">Edit Recipe</a></li>
-                <li><a href="#">Delete Recipe</a></li>
+                <li><a style="cursor: pointer;">Edit Recipe</a></li>
+                <li><a style="cursor: pointer;">Delete Recipe</a></li>
             </ul>
         </div>
     </div>

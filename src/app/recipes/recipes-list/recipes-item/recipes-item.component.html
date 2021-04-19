@@ -1,6 +1,9 @@
 <!-- <p>recipes-item works!</p> -->
 <!--1.create click event hadler (click)="onSelected()" and in that method I want to emit my own Custom event-->
-<a href="#" class="list-group-item clearfix" (click)="onSelected()">
+<!--Fixing Page Reload Issues
+//1(159-Fixing Page Reload Issues).//remove href attribubte(which sends request to the browser and reloads the page) and instead thgat add style="cursor:pointer";
+//now without href, we don't reload the page any more-->
+<a style="cursor: pointer;" class="list-group-item clearfix" (click)="onSelected()">
     <div class="pull-left">
         <h4 class="list-group-item-heading">{{recipe.name}}</h4>
         <p class="list-group-item-text">{{recipe.description}}</p>
