@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
 import { RecipesItemComponent } from './recipes/recipes-list/recipes-item/recipes-item.component';
 import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
+import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.component';
 import { RecipesComponent } from './recipes/recipes.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
@@ -18,9 +19,17 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
         },
         {
             path: 'recipes', //so I can visit this path-routh in the URL with localhost:4200/recipes
+    //161./////////////// Adding Child Routing Together 
+    //1.(161)//in app-routnig.module.ts add children: [] in the recipes(parent) path
             component: RecipesComponent, children: [
                 {
-                    path: 'recipes-detail',
+            //1.(161)here I want to load the text from ng-template(Please select a Recipe) in this empty path:''(/recipes)and we need a new component for that.//So I will create a new comp with:ng g c recipes/recipes-start;then render this child component in the recipes(parent) with <router-outlet> specieal directive
+                    path: '',
+                    component: RecipesStartComponent
+                },
+            //3.(161)add new path-route with path:':id' (:id is dinamic parameter/segment, added relative after '/recipes' t.e. in url will look like:'/recipes/1 or /recipes/2').in this path I want to load/render RecipesDetail comp.this child component will be also render in the recipes .html(parent) with <router-outlet> 
+                {
+                    path: ':id',
                     component: RecipesDetailComponent
                 },
                 {
