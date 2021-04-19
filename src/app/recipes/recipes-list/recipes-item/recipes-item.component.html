@@ -3,7 +3,9 @@
 <!--Fixing Page Reload Issues
 //1(159-Fixing Page Reload Issues).//remove href attribubte(which sends request to the browser and reloads the page) and instead thgat add style="cursor:pointer";
 //now without href, we don't reload the page any more-->
-<a style="cursor: pointer;" class="list-group-item clearfix" (click)="onSelected()">
+<!-- <a style="cursor: pointer;" class="list-group-item clearfix" (click)="onSelected()">
+    2.(162)in recipe-item remove that click listener and the listener method onSelected() in the ts code, and remove the constructor() there in recipe-item -->  
+<a style="cursor: pointer;" class="list-group-item clearfix">
     <div class="pull-left">
         <h4 class="list-group-item-heading">{{recipe.name}}</h4>
         <p class="list-group-item-text">{{recipe.description}}</p>
@@ -12,4 +14,4 @@
         <!-- <img src="{{recipe.imagePath}}" alt="{{recipe.name}}" class="img-responsive" style="max-height: 50px;">  -->
         <img [src]="recipe.imagePath" alt="{{recipe.name}}" class="img-responsive" style="max-height: 50px;"> 
     </span>
-</a> 
+</a>

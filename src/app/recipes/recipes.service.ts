@@ -48,6 +48,10 @@ export class RecipesService {
        //9.(lecture123) access to addIngredients() from shService here in Recipe service  
        this.slService.addIngredients(ingredients);
     }
+//5.(162)So in Recipe service we need to create a method getRecipe(id:number)
+    getRecipe(id:number) {
+        return this.recipes[id]; //return recipes[select item(id) as index] (go back to recipes-detail comp (comp to be loaded))
+    }
 
 
 }
