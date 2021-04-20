@@ -15,6 +15,7 @@ import { DropdownDirective } from './shared/dropdown.directive';
 import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { AppRoutingModule } from './app-routing.module';
 import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.component';
+import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 //import { ServerComponent } from './server/server.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //import { ServersComponent } from './servers/servers.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //angular is split (contain) of many modules/packages(re-usable piece of code in a separate file), and if we want to use some features of that modules/packages, simpli do here with import {} in app.modules.ts 
@@ -29,7 +30,8 @@ import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.com
     ShoppingListComponent,
     ShoppingEditComponent,
     DropdownDirective,
-    RecipesStartComponent
+    RecipesStartComponent,
+    RecipeEditComponent
     //ServerComponent,
     //ServersComponent   //we must declare here our ServerComponent, so to Angular can knows (in declaration property of @ngModule)
   ],

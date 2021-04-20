@@ -2,6 +2,7 @@
 //1.create new file app-routin.module.ts for our routes
 import { NgModule } from '@angular/core'; //4.import NgMOdule from angular/core
 import { RouterModule, Routes } from '@angular/router';
+import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
 import { RecipesItemComponent } from './recipes/recipes-list/recipes-item/recipes-item.component';
 import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
@@ -27,10 +28,24 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
                     path: '',
                     component: RecipesStartComponent
                 },
+            //3.(164)I will cut this code and place it here before ':id' routes-paths (thats is the order: 1st are the path and 2nd are parameters)
+                {
+                    path: 'new', 
+                    component: RecipeEditComponent
+                },
             //3.(161)add new path-route with path:':id' (:id is dinamic parameter/segment, added relative after '/recipes' t.e. in url will look like:'/recipes/1 or /recipes/2').in this path I want to load/render RecipesDetail comp.this child component will be also render in the recipes .html(parent) with <router-outlet> 
                 {
                     path: ':id',
                     component: RecipesDetailComponent
+                },
+        //1.(164)to can add new Recipe and to add existing recipes, we need to create a new component(ng g c recipes/recipe-edit)
+        //I will register the new route-path(relative child path in /recipes parent) here in app-rounting.module.ts(in ../recipes/new I want to load RecipeEdit comp)
+                //3(164)angular will parse 'new' as 'id' parameter(after ':id' route), so that will ocuur errors.So, I will cut this code and place it here before ':id' routes-paths (thats is the order: 1st are the paths(apsolute  relative) and 2nd are dinamic parameters(dinamic parameters are on the end))
+        //2.(164)I will duplicate this with :ide/edit(:id-we need the id parameter to can loaded) and /edit-because we are in the edit mode
+        //its the same component, and we will determine wheter we are on edit or not
+                {
+                    path: ':id/edit', 
+                    component: RecipeEditComponent
                 },
                 {
                     path: 'recipes-list',
@@ -52,6 +67,7 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
                 }
             ]
         },
+
         // {
         //     path: '**',
         //     redirectTo: 'recipes'

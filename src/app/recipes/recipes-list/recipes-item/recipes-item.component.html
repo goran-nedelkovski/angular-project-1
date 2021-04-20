@@ -9,9 +9,12 @@
 //1.(163)//add routerLink in [] because we pass dinamic parameters here, dinamic param/segmets in this array, so: [routerLink]="['id']"
 //1'.(163)//we pass here only 1 parameter/segment(id) with relative path t.e. we call this route-path here in the template with one parameter(id)(we are already in '/recipes' path-routh, so we dont need to add that).
 //1'(163)//to get that id, I need to pass some extra information in recipe-item.comp.ts(t.e. I need to create id property here in this comp with @Input, property binding)-->
-    <a style="cursor: pointer;"
+   <!--/////////////////163. Styling Active Recipe Items
+1.163.//add bootstrap class='active' with the special directive routerLinkActive="active"-->
+<a style="cursor: pointer;"
  class="list-group-item clearfix"
- [routerLink]="[id]">
+ [routerLink]="[id]"
+ routerLinkActive="active">
  <!--4.(163)when we get the id(with property binding), then pass the id property here in [], and it will be dinamic(0 or 1)-->
     <div class="pull-left">
         <h4 class="list-group-item-heading">{{recipe.name}}</h4>
