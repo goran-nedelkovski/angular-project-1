@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Recipe } from '../recipes.model';
 import { RecipesService } from '../recipes.service';
 
@@ -20,7 +20,8 @@ export class RecipesDetailComponent implements OnInit {
 //3.(lecture123)=>in the constructor() I wlll inject Recipes service (go to Recipes service)
   constructor(private recipesService:RecipesService,
   //2.(162)inject route:ActivatedRoute in the consttuctor() in recipes-detail (in this comp to be loaded)
-    private route:ActivatedRoute) { }
+    private route:ActivatedRoute,
+    private router:Router) { }
 
   ngOnInit(): void {
   //3.(162)In ngOniInit() in recipes-detail comp, we retrive/load/get the recipe with the current id (we initializing here)
@@ -43,6 +44,15 @@ export class RecipesDetailComponent implements OnInit {
   onAddToShoppingList() {
 //5.(lecture123) call that method from the service and pass the ingredients of this recipe
     this.recipesService.getIngredientsToShoppingList(this.recipe.ingredients)
-  
   }
+//4.(166)in this method in the ts, we need to navigate to 'edit' (so inject router and route).//because we are already in the recipes with the current id t.e. we are already in /recipes/:id (/recipes/0 or /recipes/1), we only need to navigate to 'edit' relativly to this currently active route
+  onEditRecipe() {
+    this.router.navigate(['edit'], {relativeTo:this.route});
+//So, we dont need id here(its only for demo purposes)
+///4.(166)the alternative way is(more complex):
+  //this.router.navigate(['../', this.id, 'edit'], {relativeTo:this.route}); //up one level(to the /recipes folder, and from there add first this.id(the current updated id that we get) and second add 'edit' (t.e. from ../recipes go to :id/edit))
+  }
+  /////////////////168. One Note about Route Observables
+  //1.(168)//when we use pre-defined(menaged) Observable from angular, we don't need to clean them(dont need to unsubscribe), but when I use my own created Obserbavles, at the end I must to clean them(to unsubscribe() to them)
 }
+

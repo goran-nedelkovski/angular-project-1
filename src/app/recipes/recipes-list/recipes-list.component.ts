@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 //import * as EventEmitter from 'node:events';
 import { Recipe } from '../recipes.model'; //to inform typeScript we must import Recipe model class here
 import { RecipesService } from '../recipes.service';
@@ -19,7 +20,9 @@ export class RecipesListComponent implements OnInit {
 //to can see this, we must do something in the .html template
 
 //6'.Now, lets use/inject instance of RecipeServise class in the constructor() in recipe-list comp
-constructor(private recipesService:RecipesService) {}
+constructor(private recipesService:RecipesService,
+  private router:Router,
+  private route:ActivatedRoute) {}
 
   ngOnInit(): void {
   //6'.we will get the value of recipes[] here in ngOnInit.And for that, we get to inject our Service in the constructor()
@@ -36,4 +39,9 @@ constructor(private recipesService:RecipesService) {}
   //   //console.log(recipe);
   //   this.recipeWasSelected.emit(recipe); //8.in emit() we pass recipe as data (emit(recipe) to the recipe parent component)
   // }
+
+  //2.(166)//in this method in the ts code, navigate to ../new path (inject router and route)
+  onNewRecipe() {
+      this.router.navigate(['new'], {relativeTo:this.route});//we are alreadu in /recipes, so I will use 'new'(relative path to that apsolute path /recipes)(next we need to do the same with edit link, so go to recipes-detail)
+  }
 }

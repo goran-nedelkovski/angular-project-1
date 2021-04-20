@@ -19,7 +19,8 @@
     <!--1(lecture 123)in recipe-derail in li>a link add click listener-->
     <!--2.(159)-//Remove href(to avoid reload the page) also on these links ad add attribute style="cursor:poniter" on the 3 links-->       
                 <li><a (click)="onAddToShoppingList()" style="cursor: pointer;">To Shopping List</a></li>
-                <li><a style="cursor: pointer;">Edit Recipe</a></li>
+        <!--3.(166)add (click) event listener in edit link in recipe-detail comp template-->
+                <li><a style="cursor: pointer;" (click)="onEditRecipe()">Edit Recipe</a></li>
                 <li><a style="cursor: pointer;">Delete Recipe</a></li>
             </ul>
         </div>
