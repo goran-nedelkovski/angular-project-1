@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Ingredient } from '../shared/ingredient.model';  // ../ ->one level up, t.e. back, out of this folder to the parent folder
 import { ShoppingListService } from './shopping-list.service';
 
@@ -7,9 +8,11 @@ import { ShoppingListService } from './shopping-list.service';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css'],
   // providers: [ShoppingListService] //4'''I will provide ShoppingListService in AppModule, because later I will access it from my Recipes section 
-})
-export class ShoppingListComponent implements OnInit {
+}) 
+export class ShoppingListComponent implements OnInit, OnDestroy {
   ingredients:Ingredient[]; //3''' initialy will be undefined, and the value of the array will be in my service
+  //3.(180)It's good practice to clean the Observable(unsubscribe() to the Subscription() in ngOnDestroy) when we leave the component.For that, first store the Subscription in a private property:of type Subscription(import from 'rxjs') 
+  private igChangeSub:Subscription //store the Subscription in a private property:of type Subsctition(import it from 'rxjs') and clean it(unsubscribe() in ngOnDestroy) when we leave the component
   // [
   //   new Ingredient('Apples', 5),
   //   new Ingredient('Tomatoes', 10)
@@ -22,7 +25,8 @@ export class ShoppingListComponent implements OnInit {
     //6'''all initialization go to ngOnInit() (the best practice in gereral)
     this.ingredients = this.slService.getIngredients();
     //11'''(..A-B lecture) here in ngOnInit() I want to listen/subscribe to my own event
-    this.slService.ingredientsChanged.subscribe(
+  //4.(180)Store the subscription in that private property(subrscribe() returns a subscription and I want to store that in that private property)
+    this.igChangeSub = this.slService.ingredientsChanged.subscribe(
       //we expect to receive some ingredient:Ingrediens[]
       (ingredients: Ingredient[]) => this.ingredients = ingredients
     );
@@ -32,5 +36,10 @@ export class ShoppingListComponent implements OnInit {
   //   //9.final, push my new ingredient obj to the Ingredients[] array
   //   this.ingredients.push(ingredient);
   // }
+
+  //5.(180)then implement OnDestoy interface and ngOnDestroy() hook we can unsubscribe() to the subscription() (no go to recipes.service.ts and do the same(replace EventEmitter with Subject observable))
+  ngOnDestroy() {
+    this.igChangeSub.unsubscribe();
+  }
 
 }

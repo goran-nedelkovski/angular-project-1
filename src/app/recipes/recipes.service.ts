@@ -1,4 +1,5 @@
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Injectable } from '@angular/core';
+//import { Subject } from 'rxjs';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Recipe } from './recipes.model';
@@ -12,7 +13,9 @@ import { Recipe } from './recipes.model';
 //1.Service is a normal ts Class (no need of Decorator, unless @Injectable() if we plan to inject a service into this service)
 export class RecipesService {
 //1''here I will add a new property (public), which will be my own Custom Event (So, I only add this in my Service.then emit this event in onSelected() in recipe-item comp).
-   @Output() recipeSelected = new EventEmitter<Recipe>();//emit event's data of type Recipe (this property will hold Recipe) 
+// @Output() recipeSelected = new EventEmitter<Recipe>();//emit event's data of type Recipe (this property will hold Recipe) 
+//6.(180)in recipes Service, replace EventEmitter with Subject observable (Import Subject from 'rxjs' here in this Service).And we can remove it because we dont need (But if I want to select different Recipe, I will use Subject obs)
+    // recipeSelected = new Subject<Recipe>();  
 //Recipe service is the place where we manage our recipes
 //2.copy/cut recipes[] array from RecipesList comp and make it private here (so to cant access from outside) 
     private recipes:Recipe[] = [
