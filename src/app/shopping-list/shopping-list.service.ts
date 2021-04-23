@@ -42,4 +42,10 @@ private ingredients:Ingredient[] = [
         // }
     }
 //So, basicaly everything(every busines logic from the component is replace here in the service)
+///////////////221. Loading the Shopping List Items into the Form
+//1(221)I want to get the item(ingredient with that id) that I want to added in the form, so we need to create a new method in shop-list Service
+    getIngredient(index:number) {//expect to get index:number as parameter
+        return this.ingredients[index];//2(221)this method will returns the current ingredient by the current index(id) of the Ingredients[] (go to shopping-edit comp)
+    }
+
 }

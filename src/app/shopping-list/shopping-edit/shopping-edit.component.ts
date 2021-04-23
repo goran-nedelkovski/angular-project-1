@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 //import * as EventEmitter from 'node:events';
 import { Ingredient } from 'src/app/shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
@@ -10,11 +10,16 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./shopping-edit.component.css']
 })
 export class ShoppingEditComponent implements OnInit, OnDestroy {
+//4.(221)now since we are in Edit mode, we want to update our form.So we can access to the form with @ViewChild and f-local Reference
+  @ViewChild('f') slForm:NgForm; //4.(221)Create @VieChild('f')//to access to the form with @ViewChild('select here the local reference f object')
   private subscription:Subscription;//create property for the subscription
   //10(220)I will store my Mode in a property and initialy set to false
     editMode = false;
     editedItemIndex:number; //create new prperty for the id that we get
-  //3.add two properties with @ViewChild('select the local reference here')
+  //3(221)//in shop-edit comp, store the item(ingredient:Ingredient with the current id from the shop-list Service) in a property
+    editedItem:Ingredient;
+
+    //3.add two properties with @ViewChild('select the local reference here')
   // @ViewChild('nameInput') nameInputRef:ElementRef;
   // @ViewChild('amountInput') amountInputRef:ElementRef;
   //4.create my own event with @Outpu() and EventEmitter<here is the type of the data that we will emit, and that is Ingredient model object(type definition)>()  
@@ -34,7 +39,16 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
       (index:number) => {
     //9.(220)here we are on Edititing..but we need to specify/determine what should we do when the form is submitted?to create a new item or editting the existing one 
         this.editMode = true; //editMode set to true because we are editing here, t.e.curently we are on editing mode
-        this.editedItemIndex = index; //11(220).store the index in a property 
+        this.editedItemIndex = index; //11(220).store the index in a property
+    //3(221)//in shop-edit comp,we can access/reach to the new method getIngredient(index) of the Service and store the item(ingredient:Ingredient with the current id(index:number that we get here) from the shop-list Service) in a property
+        this.editedItem = this.slService.getIngredient(index);
+   //4.(221)now since we are in Edit mode(and we get the item/Ingredient with this id), we want to update our form.So we can access to the form with @ViewChild and f-local Reference  
+      //5.(221)and Here in ngOnInit (while we on edit mode and we get the item/Ingredient with this current id t.e. in our subscription) we aceess to our form and setValue({updated form object with the name value and amount value of the item/ingredient})
+        this.slForm.setValue({
+          name: this.editedItem.name,
+          amount: this.editedItem.amount
+        })
+      //5(221)whenever we select a new item(Ingredient), we can populate the form with the right values(name and amount) of that item
       }
     );
   }
