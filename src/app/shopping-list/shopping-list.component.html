@@ -6,7 +6,14 @@
         <app-shopping-edit></app-shopping-edit>
         <hr>
         <ul class="list-group">
-            <a href="#" class="list-group-item" style="cursor: pointer;" *ngFor="let ingredient of ingredients">
+    <!--////////////////220. Allowing the Selection of Items in the List
+    //1.(220)lets make the items clickable and editable by adding (click) listener here in a link in shopping-list.html
+    //2.(220)I need id of the ingredient to pass as argument in this listener function(i index will be the id).So in *ngFor I need to add: let i = index;//(i will be id)and then pass the i index of each iteraton as argument in this function(i) -->
+            <a href="#" 
+            class="list-group-item" 
+            style="cursor: pointer;" 
+            *ngFor="let ingredient of ingredients; let i = index"
+            (click)="onEditItem(i)">
                 {{ingredient.name}} ({{ingredient.amount}})
             </a>
         </ul>

@@ -41,5 +41,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.igChangeSub.unsubscribe();
   }
+  //3.(220)in the ts code in the method I expect to receive index:number as parameter
+  onEditItem(index:number) {//4.(220).to get this information to shopping-edit comp(this index:number), I will create Subject obsevable in the service to I can listen/subscribe in shopping-edit comp(go to shop-list service)
+    //5.(220)in onEditAtem() send our Subject observable from the service with next(index,//parameter of the method, that is the new value that our Observable will send/emit)
+    this.slService.startedEditing.next(index); //(go to shop-edit comp)
+  }
 
 }

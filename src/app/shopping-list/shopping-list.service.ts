@@ -10,6 +10,8 @@ export class ShoppingListService {
 //@Output() ingredientsChanged = new EventEmitter<Ingredient[]>(); //this EventEmitter will emit our Ingreadien[] array
 //2.(180)//then I can create Subject observable obj just like EventEmitter here in the Service
 ingredientsChanged = new Subject<Ingredient[]>();
+//4.(220).to get this information(that index:number) to shopping-edit comp(because that is comp that I am editing), I will create Subject obsevable in the service to I can listen/subscribe in shopping-edit comp
+startedEditing = new Subject<number>();//Subject is generic type of type:number(the type of the data that Subsect obs will send is number)
 //1'''add/replace the Ingredient[] here from shopping-list comp.this service will manage our shopping-list(our ingredients)
 //1''' and make it private
 private ingredients:Ingredient[] = [
