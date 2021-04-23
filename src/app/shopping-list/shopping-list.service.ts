@@ -29,7 +29,7 @@ private ingredients:Ingredient[] = [
     //10'''(..A-B lecture) here whenever we changed our array(whenever change array with new ingredient added), simply call our own event.emit(copy of our array, not the oriiginal)
     // this.ingredientsChanged.emit(this.ingredients.slice());//simply call our own event.emit(copy of our array, not the oriiginal)
 //2.(180)then replace emit() with next() (everywhere in this code in the Service.//next()=>send/emit our Observable with that new value as argument) 
-    this.ingredientsChanged.next(this.ingredients.slice());
+        this.ingredientsChanged.next(this.ingredients.slice());
     }
 //8.(lecture123)Here I will add new method addInghredients(here I expect to receive our list of ingredients)
     addIngredients(ingredients:Ingredient[]) {
@@ -47,5 +47,11 @@ private ingredients:Ingredient[] = [
     getIngredient(index:number) {//expect to get index:number as parameter
         return this.ingredients[index];//2(221)this method will returns the current ingredient by the current index(id) of the Ingredients[] (go to shopping-edit comp)
     }
-
+//2.(222) In shopping-list Service I will create new method updateIngredient() and here I expect to get as parameters the current index:number and newIngredient:ingredient
+    updateIngredient(index:number, newIngredient:Ingredient) { //here I expect to get as parameters the index:number and newIngredient:ingredient
+      //3.(222)update/set the igredient(old ingredient with the current index of ingredients[]), set to the updated newIngredient (t.e. replace the old ingredient with new updated ingredient )
+        this.ingredients[index] = newIngredient;//update/set the igredient(old ingredient with the current index of ingredients[]), set to the updated newIngredient (t.e. replace the old ingredient with new updated ingredient )
+    //4.(222)then the whole ingredients[] array will be changed/updated and so we can call ingredientsChanges subject observable to send/emit this updated/new ingredients[] array (go to shop-edit comp)
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
 }

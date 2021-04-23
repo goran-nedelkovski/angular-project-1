@@ -65,7 +65,15 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     //this.ingredientAdded.emit(newIngredient); 
     //8'''remove the emitted event(we no longer need the event)
     //8'''and instead of emit event, call the addIngreadient(with newIngredient object/instance from here) from the Service (but first inject the service in the constructor())
-    this.slService.addIngredient(newIngredient);
+  //5(222)here in onAddItem() if we are in EditMode, we can call updateIngredients(editedItemIndex, newIngredient) from the Service, else we can call addIngredient() from the Service
+    if(this.editMode) {
+      this.slService.updateIngredient(this.editedItemIndex, newIngredient);
+    }
+  //5.(222)else if we are not in editMode, then add new Ingredient
+    else {
+      this.slService.addIngredient(newIngredient);
+    }
+     
   }
   // addIngredient(nameInput, amountInput) {
   //   this.nameInput = nameInput.nativeElement.value;
