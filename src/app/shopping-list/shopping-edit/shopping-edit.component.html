@@ -4,7 +4,10 @@
 1(218) remove local references, remove (click)listener and instead that I will in <form (ngSubmit)="onAddItem()"
 2.(218)add also local reference varibale with #f(that willm hold form element)="ngForm"//with ngForm, Angular will create js object behind the scene(js form object) and we can pass this local reference f(this js form object) as argument in the function onAddItem()
 3.(218)we can register some controls..for first input we will have: name="name" //"name" is the property of js form object, then I will use ngModel constol also.for the second input we will have these constrols: name="amount"//amount is the property of the js form object and nex control will be ngModel(make sure FormsModule is imported).//the Add button will submit the form because its of type 'submit'-->
-
+<!--//////////////219. Adding Validation to the Form
+1(219)add required atribute in the input elements
+2.(219)disable the add button if the form is invalid like this: [disabled]="!f.valid"
+3.(219)if we want to use numbers > 0, then I will use [pattern] validator ="Regular expression"-->
 <div class="row">
     <div class="col-xs-12">
         <form (ngSubmit)="onAddItem(f)" #f="ngForm">
@@ -16,7 +19,9 @@
                      id="name" 
                      class="form-control"
                      name="name"
-                     ngModel>
+                     ngModel
+                     required
+                     >
                 </div>
                 <div class="col-sm-2 form-group">
                     <label for="amount">Amount</label>
@@ -25,13 +30,15 @@
                     id="amount" 
                     class="form-control"
                     name="amount"
-                    ngModel>
+                    ngModel
+                    required
+                    pattern="^[1-9]+[0-9]*$">
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
                     <!--1.create (click)=onAddItem() lestener.here I could pass local ref variables as parameters, but I will go with @VieChild approuch here-->
-                    <button class="btn btn-success" type="submit">Add</button>
+                    <button class="btn btn-success" type="submit" [disabled]="!f.valid">Add</button>
                     <button class="btn btn-danger" type="button">Delete Item</button>
                     <button class="btn btn-primary" type="button">Clear</button>
                 </div>
