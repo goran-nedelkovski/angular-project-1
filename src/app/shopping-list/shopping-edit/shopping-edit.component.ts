@@ -54,7 +54,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   }
 //2.define onAddItem() in ts code comp.
 //4.(218).I can remove that @ViewChilds in the ts code and in onAddItem() we expect to receive as parameter form:NgForm (form of type NgForm(form js object).Import NgForm from @angular/forms)
-  onAddItem(form:NgForm) {
+  onSubmit(form:NgForm) {
   //5.(218)we can get the value of the form with form.value and store that in a property const value
   const value = form.value;
     //3.in onAddItem() method I want to emit my new own event where I can pass this data(these 2 inputs values in new object/incaence) to the parent component(to the shop-list comp, to Ingredient[])
@@ -73,6 +73,12 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     else {
       this.slService.addIngredient(newIngredient);
     }
+  ///////////////////223. Resetting the Form
+  //1.(223)here in onAddItem() after we save the Updated value or save the new value of the form, we can reset the form here with form.reset();
+    //2.(223) here we can switch edit mode back to false (and now we are not on editMode, t.e. we are on add new items mode)(because we were stack in editMode=true and we have never leave this editMode=true), so we can leave it now (because we are done)
+    this.editMode = false;
+    form.reset();
+  //3(223)also I can change/replace the name of this method onAddItem() to onSubmit() here and in the template
      
   }
   // addIngredient(nameInput, amountInput) {
