@@ -1,5 +1,46 @@
-<!-- <p>shopping-edit works!</p> -->
+<!-- <p>shopping-edit works!</p> 
+/////////////////218. TD: Adding the Shopping List Form
+//2nd way(with TD-template driven forms).
+1(218) remove local references, remove (click)listener and instead that I will in <form (ngSubmit)="onAddItem()"
+2.(218)add also local reference varibale with #f(that willm hold form element)="ngForm"//with ngForm, Angular will create js object behind the scene(js form object) and we can pass this local reference f(this js form object) as argument in the function onAddItem()
+3.(218)we can register some controls..for first input we will have: name="name" //"name" is the property of js form object, then I will use ngModel constol also.for the second input we will have these constrols: name="amount"//amount is the property of the js form object and nex control will be ngModel(make sure FormsModule is imported).//the Add button will submit the form because its of type 'submit'-->
+
 <div class="row">
+    <div class="col-xs-12">
+        <form (ngSubmit)="onAddItem(f)" #f="ngForm">
+            <div class="row">
+                <div class="col-sm-5 form-group">
+                    <label for="name">Name</label>
+                    <input 
+                     type="text"
+                     id="name" 
+                     class="form-control"
+                     name="name"
+                     ngModel>
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label for="amount">Amount</label>
+                    <input 
+                    type="number" 
+                    id="amount" 
+                    class="form-control"
+                    name="amount"
+                    ngModel>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--1.create (click)=onAddItem() lestener.here I could pass local ref variables as parameters, but I will go with @VieChild approuch here-->
+                    <button class="btn btn-success" type="submit">Add</button>
+                    <button class="btn btn-danger" type="button">Delete Item</button>
+                    <button class="btn btn-primary" type="button">Clear</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--1st way-->
+<!-- <div class="row">
     <div class="col-xs-12">
         <form>
             <div class="row">
@@ -22,12 +63,12 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <!--1.create (click)=onAddItem() lestener.here I could pass local ref variables as parameters, but I will go with @VieChild approuch here-->
-                    <button class="btn btn-success" type="submit" (click)="onAddItem()">Add</button>
+                1.create (click)=onAddItem() lestener.here I could pass local ref variables as parameters, but I will go with @VieChild approuch here-->
+                    <!-- <button class="btn btn-success" type="submit" (click)="onAddItem()">Add</button>
                     <button class="btn btn-danger" type="button">Delete Item</button>
                     <button class="btn btn-primary" type="button">Clear</button>
                 </div>
             </div>
         </form>
     </div>
-</div>
+</div> --> 

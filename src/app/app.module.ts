@@ -38,7 +38,7 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
   //2.we must import here also, so to Angular understand with @NgModule that we need to import this feature 
   imports: [
     BrowserModule,  //BrowserModule is build-in Module, to can start our app on the Browser
-    FormsModule,
+    FormsModule,  //we need Forms module for building forms, [(ngModel)]...
     AppRoutingModule //import AppRoutingModule here in imports:[] and in the top
   ],
   providers: [ShoppingListService],
