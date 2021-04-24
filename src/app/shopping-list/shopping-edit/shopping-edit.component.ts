@@ -91,5 +91,16 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+  //2(224)in this method onClear() in the ts code, reset the form and switch editMode to false.(so with this, we clear/cancel the form ) 
+  onClear() {
+    this.slForm.reset();
+    this.editMode = false;
+  }
+  //2(225)in this onDelete() method(in ts code)first call onClear(); and we need to inform the Service that one of the items will be delete (so go to the shop-list Service and create delete method there)
+  onDelete() {
+    //5.(225)in onDelete() in our component, call that deleteIngredient() from the service and pass as parameter this.index property from this component
+    this.slService.deleteIngredient(this.editedItemIndex);
+    this.onClear();//call onClear(); 
+  }
 
 }

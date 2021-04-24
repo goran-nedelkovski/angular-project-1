@@ -54,4 +54,10 @@ private ingredients:Ingredient[] = [
     //4.(222)then the whole ingredients[] array will be changed/updated and so we can call ingredientsChanges subject observable to send/emit this updated/new ingredients[] array (go to shop-edit comp)
         this.ingredientsChanged.next(this.ingredients.slice());
     }
+    //3(225)in shop-list Service create deleteIngredient() method here.we can delete with splice() on Ingredients[] array
+    deleteIngredient(index:number) {//expect to get the index:number
+        this.ingredients.splice(index, 1); //splice(start at this index, and splice/remove 1 element) t.e. remove that one item on this index
+    //4(225)after this change, all Ingredients[] array has changes so we can call here our Subject observable ans emit/send this new value of the arr
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
 }
