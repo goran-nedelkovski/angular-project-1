@@ -42,6 +42,10 @@ export class RecipeEditComponent implements OnInit {
       }
     );
   }
+  //5.I will add this method onSubmit() in my ts code and inside simply log to the console my recipeForm)
+  onSubmit() {
+    console.log(this.recipeForm);
+  }
   /////////////////227. Creating the Form For Editing Recipes
   //1.(227)after we created form's template, lets initial our form here in this ts method.Its important here to know wheter we are on edit mode or on new mode.first I will create a private method here in recipes-edit comp
   private initForm() { //3.(227)initial our form here with a value new FormGroup(to guve us the outer sheal/frame of our form,//pass js object with key:value pairs of the controls that I ant to register here)
