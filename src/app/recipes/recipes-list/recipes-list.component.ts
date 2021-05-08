@@ -25,6 +25,12 @@ constructor(private recipesService:RecipesService,
   private route:ActivatedRoute) {}
 
   ngOnInit(): void {
+  //11(233)now in my recipe-list component I want to subscibe/listen to my Subject observable(here in this component because here we are get the recipes )
+    this.recipesService.recipesChanges.subscribe(
+      (recipes:Recipe[]) => {
+        this.recipes = recipes;
+      }
+    );
   //6'.we will get the value of recipes[] here in ngOnInit.And for that, we get to inject our Service in the constructor()
   this.recipes = this.recipesService.getRecipes(); //get the copy of that array and store in the recipes property 
 }

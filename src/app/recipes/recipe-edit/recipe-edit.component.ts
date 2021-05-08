@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Recipe } from '../recipes.model';
 import { RecipesService } from '../recipes.service';
 //164.///////////// Adding Editing Routes
 //1.(164)to can add new Recipe and to add existing recipes, we need to create a new component(ng g c recipes/recipe-edit)
@@ -44,7 +45,42 @@ export class RecipeEditComponent implements OnInit {
   }
   //5.I will add this method onSubmit() in my ts code and inside simply log to the console my recipeForm)
   onSubmit() {
-    console.log(this.recipeForm);
+    
+    ////////////////////233.Submit the form
+    //1.(233)here in onSubmit() I dont want to print my form, but I want to save/add my form(recipe) in my array of recipes or update the existing one.(for that go to recipes.service.ts and create these 2 methods)
+    //console.log(this.recipeForm);
+    //6.(233)(1st way)lets create a newRecipe obj/instance here outside of if- with new Recipe(here in Recipe() constructor we need to pass all the data of my recipeForm that the constructor expects: this.recipeForm.value['name'], ...)
+    // const newRecipe = new Recipe(
+    //   this.recipeForm.value['name'],
+    //   this.recipeForm.value['imagePath'], 
+    //   this.recipeForm.value['description'], 
+    //   this.recipeForm.value['ingredients']);
+    if(this.editMode) {
+    //5(233)check if we are on EditMode(true), then update the existing one, t.e. call updateRecipe() from the Service.as 1st argument pass this.id, and as 2nd argument we need to create a newRecipe (const newRecipe=new Recipe(...) outside of if-else)
+      // this.recipesService.updateRecipe(this.id, newRecipe);
+    //8.(233)(2nd way)instead of createing newRecipe obj/instance, we can do with shortend, t.e. we can pass as 2nd argument only this.recipeForm.value (and this obj will contain all the properties of my Recipe/all empty input fields, so its the same)  
+      this.recipesService.updateRecipe(this.id, this.recipeForm.value);
+    }
+    //7.(233)else if we are not in editMode, then add/save a new recipe in my recipes[] t.e. call addRecipe() from the Service and pass newRecipe obj/instance here as argument
+    else {
+      this.recipesService.addRecipe(this.recipeForm.value);
+    }
+  //9.(233)but because when we get our Recipes in the Service we use .slice()/copy so, this recipe thatg we are using in component is not the same as that recipes in the Service)(because of slice()).So go in the recipesservice.ts and create a Subject observable (just like in a shoping-list service) 
+  }
+  ////////////////231.Adding new Ingredient Controls
+  //3(231)in this method (in the ts) I can dinamicaly add new Ingredient like this:
+  onAddIngredient() {//4.(231)access to the array 'ingredients' must be with get('ingredients')(getter) and to understand angular that this is an Array, we must define the generic type at the begining <FormArray> and all this part with () t.e. (<FormArray>this.recipeForm.get('ingredients')) 
+    (<FormArray>this.recipeForm.get('ingredients')).push( //5.on the selected array(FormArray), push new Ingredient obj as new FormGroup({ name:new FormControl, amount:new FormControl})
+      new FormGroup({  //5.on the selected array(FormArray), push new Ingredient obj as new FormGroup({ name:new FormControl, amount:new FormControl})
+    //3.(232)add also Validations here in onAddIngredient()(just copy-paste the array[] of Validators as second argument in amount controls, and as 1st argument will be null(empty value) as default value)
+        name: new FormControl(null, Validators.required), //as 1st argument will be null(empty value) as default value), and 2nd argument will be Validators.required
+        amount: new FormControl(null, [
+          //for name control will be also Validators.requered, but for amount we will add array od two Validations(Validators.required and Valitors.pattern(/copy-paste the regular expression here in //(between these 2 back-slashes)/))   
+               Validators.required,
+               Validators.pattern(/^[1-9]+[0-9]*$/)
+        ])
+      })
+    );
   }
   /////////////////227. Creating the Form For Editing Recipes
   //1.(227)after we created form's template, lets initial our form here in this ts method.Its important here to know wheter we are on edit mode or on new mode.first I will create a private method here in recipes-edit comp
@@ -52,6 +88,9 @@ export class RecipeEditComponent implements OnInit {
    let recipeName = ''; //create outside new local variable
     let recipeImagePath = '';//7.(227)//the same will be true with imagePath also, so lets create a property for imagePath = '' initialy and if we are on editMode then set the value of this property to recipe.imagePath.
     let recipeDescription = ''; //8.(227)//7.(227)//the same will be true with descrdiption also, so lets create a property for recipeDescription = '' initialy and if we are on editMode then set the value of this property to recipe.description.
+////////////////230. Adding Ingredient Controls to a Form Array
+  //1.(230)when we initial the form, we need a property recipeIngredients = new FormArray() (a default value is this new FormArrat([empty array initialy]))
+    let recipeIngredients = new FormArray([]); //FormArray initialy set to empty [] array (without ingredients) 
     //5.(227)here we will write some logic of what the value will be if we are on editMode
     if(this.editMode) {
       //6.(227)inject our Recipe Service and the if we are on editMode then the value of recipeName will be the currentRecipe (with that current id) .name
@@ -59,12 +98,38 @@ export class RecipeEditComponent implements OnInit {
       recipeName = recipe.name;
       recipeImagePath = recipe.imagePath;
       recipeDescription = recipe.description;
+  //2(230)here we need to check if we have some ingredients in my loaded recipe to begin with
+      if(recipe['ingredients']) {//so, check if recipe['ingredients'] or recipe.ingredients proeperty exists(is set), then for of loop each ingredient objects in that array
+        for(let ingredient of recipe.ingredients) { //3(230)for of loop each ingredient object in that array
+          recipeIngredients.push( //4(230)in recipeIngredients array push each ingredient object like formFroup of 2 FormControls(name and amount)
+            new FormGroup({
+              'name': new FormControl(ingredient.name, Validators.required),
+              'amount': new FormControl(ingredient.amount, [
+           //2(232)for name control will be also Validators.requered, but for amount we will add array od two Validations(Validators.required and Valitors.pattern(/copy-paste the regular expression here in //(between these 2 back-slashes)/))   
+                Validators.required,
+                Validators.pattern(/^[1-9]+[0-9]*$/)
+              ])
+            })
+          )
+        }
+      
+      }
     }
+  /////////////////232.Adding validation
+  //1.(232)(add Validator.required as second argument in the FormControls od my recipeForm)
    this.recipeForm = new FormGroup({ 
      //4.(227)here in FormControl()we have to deceide/determine wheter we are on editMode or not.So create outside new local variable 
-      'name': new FormControl(recipeName), //9(227)in FormControl() pass as argument recipeName.So the value of recipeName will be eahther '' (empty string, if we are not on editMode) or the value will be recipe.name(current recipe that we are editing). do the same with other 2 controls
-      'imagePath': new FormControl(recipeImagePath),
-      'description': new FormControl(recipeDescription)
+      'name': new FormControl(recipeName, Validators.required), //9(227)in FormControl() pass as argument recipeName.So the value of recipeName will be eahther '' (empty string, if we are not on editMode) or the value will be recipe.name(current recipe that we are editing). do the same with other 2 controls
+      'imagePath': new FormControl(recipeImagePath, Validators.required),
+      'description': new FormControl(recipeDescription, Validators.required),
+    //5.(230)here in my recipeForm, we can initialy set 'ingredients' formControl to recipeIngredients array (new array fill with the new Ingredient)
+      'ingredients': recipeIngredients //6.(230)now lets sinhronize this with our html code
     });
   }
+  /////////////////229.Fixing a Bug
+  //1.(229)"get the controls" logic (of my 'ingredients' FormArray)into a getter of my component code (the .ts file):
+  get controls() {
+    return (<FormArray>this.recipeForm.get('ingredients')).controls;
+  }
+
 }

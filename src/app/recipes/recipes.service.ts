@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 //import { Subject } from 'rxjs';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
@@ -12,6 +13,8 @@ import { Recipe } from './recipes.model';
 //1.lets create(manualy) a recipes.service.ts in the recipes folder (service file should be in the folder with that features, next to the component's files )
 //1.Service is a normal ts Class (no need of Decorator, unless @Injectable() if we plan to inject a service into this service)
 export class RecipesService {
+//9(233)lets create a Subject observable in our Recipe Service, whenever the recipes[] changes(just like in a shoping-list service)
+    recipesChanges = new Subject<Recipe[]>(); //<Subject obs is of geeneric type Recipe[]>
 //1''here I will add a new property (public), which will be my own Custom Event (So, I only add this in my Service.then emit this event in onSelected() in recipe-item comp).
 // @Output() recipeSelected = new EventEmitter<Recipe>();//emit event's data of type Recipe (this property will hold Recipe) 
 //6.(180)in recipes Service, replace EventEmitter with Subject observable (Import Subject from 'rxjs' here in this Service).And we can remove it because we dont need (But if I want to select different Recipe, I will use Subject obs)
@@ -54,6 +57,19 @@ export class RecipesService {
 //5.(162)So in Recipe service we need to create a method getRecipe(id:number)
     getRecipe(id:number) {
         return this.recipes[id]; //return recipes[select item(id) as index] (go back to recipes-detail comp (comp to be loaded))
+    }
+//2(233)in my recipe Service lets create these 2 methods
+    addRecipe(recipe: Recipe) { //expect go receive recipe:recipe as parameter
+     //3.(233)add-save/push my recipe in recipes[] 
+        this.recipes.push(recipe); //add-save/push my recipe in recipes[]
+    //10.(233)here in addRecipe() our Recipe[] will change and I will here call our Subject obs that will emit/send value of ouchanged recipe[]/copy (go to recipe-list comp)
+        this.recipesChanges.next(this.recipes.slice());
+    }
+    updateRecipe(index:number, newRecipe:Recipe) {//expect to recieve current index:number and newRecipe:recipe
+    //4.(233)update/replace the existing/old one at the current index, replace/set with newRecipe:recipe
+        this.recipes[index] = newRecipe; //update/replace the existing/old one at the current index, replace/set with newRecipe:recipe 
+    //10.(233)also in updateRecipe() do the same because our Recipe[] will change and I will here call our Subject obs that will emit/send value of our changed recipe[]/copy (go to recipe-list comp)
+    this.recipesChanges.next(this.recipes.slice());
     }
 
 

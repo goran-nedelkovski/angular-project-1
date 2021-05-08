@@ -1,0 +1,6 @@
+/*5.(232)in Css (recipe-edit.css) I can finish the Validation by mark what is invalid;
+add class .ng-invalid to input element and to textarea and add class .ng-touch like this:*/
+input.ng-invalid.ng-touch,
+textarea.ng-invalid.ng-touch {
+    border: 1px solid red;
+}
