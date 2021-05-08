@@ -23,7 +23,9 @@
                     <!--2.(159)-//Remove href(to avoid reload the page t.e. to avoid sending http requests to the browser that will slow out app) also on these links ad add attribute style="cursor:poniter" on the 2 links-->
                     <a style="cursor: pointer;" class="dropdown-toggle" role="button">Menage <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a style="cursor: pointer;">Save Data</a></li>
+            <!--//7(281)now make sure that storeRecipe() is called (and this method will be call in Header comp.add (click) listener here in Herade component;s template on these button (click)="onSaveData()"-->
+                        <li><a style="cursor: pointer;" (click)="onSaveData()">Save Data</a></li>
+                        <!-- <li><a style="cursor: pointer;" (click)="onLoadData()">Fetch Data</a></li> -->
                         <li><a style="cursor: pointer;">Fetch Data</a></li>
                     </ul>
                 </li>
