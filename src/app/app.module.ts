@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 //1.we must import here first, so to TypeScript understand that we need to import this feature from the module/package '@angular/forms' 
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { RecipesComponent } from './recipes/recipes.component';
@@ -40,7 +41,8 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
     BrowserModule,  //BrowserModule is build-in Module, to can start our app on the Browser
     FormsModule,  //we need Forms module for building forms, [(ngModel)]...
     ReactiveFormsModule, //1.(228)first import ReactiveFormsModule from @ang/forms and import it in this imports:[] in app.module.ts
-    AppRoutingModule //import AppRoutingModule here in imports:[] and in the top
+    AppRoutingModule, //import AppRoutingModule here in imports:[] and in the top
+    HttpClientModule //3.(280)to can be used http:HttpClient, first we must import HttpClientModule here in imports:[] and import at the top from '@angular/common/http'
   ],
   providers: [ShoppingListService],
   bootstrap: [AppComponent]  //starts our application by this root component, (which component will be recognize in the index.html file? => AppComponent)

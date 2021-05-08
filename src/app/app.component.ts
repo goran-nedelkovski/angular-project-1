@@ -48,3 +48,6 @@ export class AppComponent {
 //creating components (direct in the main app folder)=> ng g c repipes and ng g c shopping-list
 //creating nested components in recipe(overall component that will hold the recipes-list on the left and recipes-detail on the right side)=> ng g c recipes/resipes-listng g c recipes/resipes-detail ng g c recipes/resipes-list/resipes-item 
 //creating nested components in shopping-list => ng g c shopping-list/shopping-edit (for ingredients)
+
+//279. Backend (Firebase) Setup => log in (sign in) on Firebase.console with my google (gmail) account, then create/add new project -> enter project name: ng-course-recipe-book -> next -> checked all and Create new project
+//->then choose Realtime Database -> create Database -> choose realtime database location: Us(us-central1) or Belgium(europe-west1) -> Start in test mode (for now, without authentication(in test mode we can unlimited read and write access without auth..)..but we will add authentication soon in the next section) ->  Enable
