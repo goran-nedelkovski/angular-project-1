@@ -22,24 +22,28 @@ export class RecipesService {
     // recipeSelected = new Subject<Recipe>();  
 //Recipe service is the place where we manage our recipes
 //2.copy/cut recipes[] array from RecipesList comp and make it private here (so to cant access from outside) 
-    private recipes:Recipe[] = [
-        new Recipe('Tasty Snitzel',
-         'This is simply a test',
-          'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
-          [
-        //2''''add here in recipes[], add [] of some new Ingredien() in both (then go to repipes-detail comp)
-              new Ingredient('Meat', 1),
-              new Ingredient('French Fries', 20)
-          ]),
-        new Recipe('Big fat Burger',
-         'This is simply a test', 
-         'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
-         [
-            new Ingredient('Buns', 2),
-            new Ingredient('Meat', 1)
-         ])
-    ];   //of type Recipe array t.e. array of Recipes t.e. array of Recipe objects t.e. [{Recipe obj1},{Recipe obj 2 },...
-//7.(lecture 123)Here we can inject ShopList service in the constrctor()
+///////////////283. Transforming Response Data
+//1.(283)we no longer need this existing array of recipes(because we have fetched/loaded recipes:Recipe[]]), so I will comment this array (comment to in case if we need again this dummy data)
+// private recipes:Recipe[] = [
+    //     new Recipe('Tasty Snitzel',
+    //      'This is simply a test',
+    //       'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
+    //       [
+    //     //2''''add here in recipes[], add [] of some new Ingredien() in both (then go to repipes-detail comp)
+    //           new Ingredient('Meat', 1),
+    //           new Ingredient('French Fries', 20)
+    //       ]),
+    //     new Recipe('Big fat Burger',
+    //      'This is simply a test', 
+    //      'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
+    //      [
+    //         new Ingredient('Buns', 2),
+    //         new Ingredient('Meat', 1)
+    //      ])
+    // ];   //of type Recipe array t.e. array of Recipes t.e. array of Recipe objects t.e. [{Recipe obj1},{Recipe obj 2 },...
+//2.(283)instead I wi/ll initialize private property recipes: Recipe[] to an empty array [].(so when app load, we will have no recipes loaded here)(go to Data Storage service)
+    private recipes: Recipe[] = [];
+    //7.(lecture 123)Here we can inject ShopList service in the constrctor()
     constructor(private slService:ShoppingListService) {}
     //3.we can add/create getRecipes() method(public API) which can access to the private recipes[] (and here we can access to this method from outside and trough this method we can indirectly access to the private recipes[])
 //5.(282) create a method to overwrite/re-set the existing array of Recipes (overwright this array with fetched/loaded recipes) with fetched/loaded recipes
