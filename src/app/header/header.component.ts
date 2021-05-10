@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Recipe } from '../recipes/recipes.model';
+//import { Subscription } from 'rxjs';
+//import { Recipe } from '../recipes/recipes.model';
 import { DataStorageService } from '../shared/data-storage.service';
 
 @Component({
@@ -9,7 +9,6 @@ import { DataStorageService } from '../shared/data-storage.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  private recipesSub:Subscription;
   //3.create own event featureSelected
   //with @Output decorator, this our own event will be listenable from outside(from our parent component, app comp)
   // @Output() featureSelected = new EventEmitter<string>()
@@ -36,14 +35,11 @@ export class HeaderComponent implements OnInit {
   //8(281)that's all, and we can see in the console the response(our stored resipes[]) and in the firebase we can see a new node resipes (folder), which contains our data (our stored recipes).
   //8(281).if we used post request (for one single Recipe is used post() btw), then in the db we need to have an encripted key (id) for that Recipe (encriped kes for all Recipes objects/pieces), but with put() method, firebase assume that I know what I put there in the db(so, we dont need encripted keys(id) with put() method //only for post() we need that id(encripted keys))
   }
-
-  // onLoadData() {
-  //   this.recipesSub = this.dataStorageService.fetchRecipes().subscribe(
-  //     (recipes:Recipe[]) => {
-  //       console.log(recipes);
-  //     }
-  //   );
-  // }
+//3.(282)//add this onFecthData() on header.comp. ts and there we can accces to that method fetchRecipes() trough the injected DataStorage Service 
+  onFetchData() {
+    this.dataStorageService.fetchRecipes();
+    
+  }
 
   // ngOnDestroy() {
   //   this.recipesSub.unsubscribe();

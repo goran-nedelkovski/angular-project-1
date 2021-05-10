@@ -31,8 +31,20 @@ export class DataStorageService {
         }
     ); //1st argument in put() will be that url-api endpoint(copy-paste here and in the end of the url, add /recipes.json segment/node.firebase will transform/translate this segment in/as folder recipes in which we can store/save our data),2nd argument is our recipes data that we want to attach/send to this url 
     }
-
-    // fetchRecipes() {
-    //     return this.http.get<Recipe[]>('https://ng-course-recipe-book-9f63a-default-rtdb.europe-west1.firebasedatabase.app/recipes.json');
-    // }
+///////////////////282. Fetching Recipes
+//1.(282) create fetchRecipes() in our DataStorage Service, and this method will be trigger/fire when we click on fetch button (go to header component template)
+    fetchRecipes() {
+    //4.(282) return http.get('the argument is the same url-api endpoint'): Observable (). Where we can subscribe t.e. where are we interested/care about the response(about the loaded recipes)? We wont subscribe on the header component, because header component is not interested/not care about the response (we are not using recipes on the Header).So we will subscibe in this DataStorage Service
+        return this.http.get<Recipe[]>('https://ng-course-recipe-book-9f63a-default-rtdb.europe-west1.firebasedatabase.app/recipes.json').subscribe(
+        //with <Recipe[]> we inform angular which will be the type of the extracted Responce body (return Recipe[])
+            recipes => { //we expect to get/receive our fetch/loaded recipes
+                //console.log(recipes);
+            //7.(282)here in subscibe() in data storage Service, call the injected Recipes Service and call setRecipes(with our fetched/loaded recipes as parameter)
+                this.recipesService.setRecipes(recipes);//7.now we can forward these new fetched/loaded recipes (to setRecipe() in Recipe service where we will overwrite/re-set the existing array of recipes with these new fetched/loaded array of recipes)
+            }
+        );
+        //4.(282)we can subscibe here in DataStorage service where we are injecting Recipes Service, because maybe we can do something with the Recipes Service, to push/move the loaded/fetched recipes in that Recipes service which in the end is the place where we menage our Recipes.
+    //4(282)we should Set our existing array of recipes/our currently loaded Recipes(in the Recipes service) equal to these onces(to these fetched recipes), to overwright/re-set them to these fetched recipes.(to do that, go to recipes.service)
+        //4(282.)btw Subscribe where?->where are we interested/care about the response(about the loaded recipes)? We wont subscribe on the header component, because header component is not interested/not care about the response (we are not using recipes on the Header).So we will subscibe here in this DataStorage Service
+    }
 }

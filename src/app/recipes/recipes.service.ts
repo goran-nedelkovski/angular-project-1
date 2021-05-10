@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { DataStorageService } from '../shared/data-storage.service';
 //import { Subject } from 'rxjs';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
@@ -41,6 +42,17 @@ export class RecipesService {
 //7.(lecture 123)Here we can inject ShopList service in the constrctor()
     constructor(private slService:ShoppingListService) {}
     //3.we can add/create getRecipes() method(public API) which can access to the private recipes[] (and here we can access to this method from outside and trough this method we can indirectly access to the private recipes[])
+//5.(282) create a method to overwrite/re-set the existing array of Recipes (overwright this array with fetched/loaded recipes) with fetched/loaded recipes
+    setRecipes(recipes: Recipe[]) { //we expect to get/retrieve as parameter recipes:Recipe[] (our fetced/loaded recipes)
+        this.recipes = recipes; //5.(282)(and this will overwrite/re-set our existing array with new fetched/loaded recipes(with parameter recipes:Recipe[]))
+        //6.(282) since we changed our recipes array, we need to call here recipesChanged subject observable and send/emit/push the new value (this.recipes.slice()-the copy) with next() (go back to dataStorage Service)
+        this.recipesChanges.next(this.recipes.slice()); //emit/send/next this new array of fetched/loaded recipes, send/next() back to the DataStorage Service(t.e. to the place where we are interested/care about the response (where we subscibe to our fetched/loaded recipes)))
+        // this.dataStorageService.fetchRecipes().subscribe(
+        //     recipes => {
+        //         this.recipes = recipes;
+        //     }
+        // );
+    }
     getRecipes() {
     //with this.recipes we return a direct reference to the array
     //4.because array are objects of reference type (from javaScript-reference type lecture), we can create a copy of the array with slice() and with that slice() method we return a new array which is copy of the original array (and with that we can't access to the original private array from outside, but we only get the copy)

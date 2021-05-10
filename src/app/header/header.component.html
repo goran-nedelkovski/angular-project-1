@@ -25,8 +25,9 @@
                     <ul class="dropdown-menu">
             <!--//7(281)now make sure that storeRecipe() is called (and this method will be call in Header comp.add (click) listener here in Herade component;s template on these button (click)="onSaveData()"-->
                         <li><a style="cursor: pointer;" (click)="onSaveData()">Save Data</a></li>
-                        <!-- <li><a style="cursor: pointer;" (click)="onLoadData()">Fetch Data</a></li> -->
-                        <li><a style="cursor: pointer;">Fetch Data</a></li>
+                <!--2(282)that method fetchRecipes() from the Service, will be trigger/fire when we click on fetch button here in header.html-->
+                        <li><a style="cursor: pointer;" (click)="onFetchData()">Fetch Data</a></li> 
+                        
                     </ul>
                 </li>
             </ul>
