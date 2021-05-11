@@ -24,25 +24,25 @@ export class RecipesService {
 //2.copy/cut recipes[] array from RecipesList comp and make it private here (so to cant access from outside) 
 ///////////////283. Transforming Response Data
 //1.(283)we no longer need this existing array of recipes(because we have fetched/loaded recipes:Recipe[]]), so I will comment this array (comment to in case if we need again this dummy data)
-// private recipes:Recipe[] = [
-    //     new Recipe('Tasty Snitzel',
-    //      'This is simply a test',
-    //       'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
-    //       [
-    //     //2''''add here in recipes[], add [] of some new Ingredien() in both (then go to repipes-detail comp)
-    //           new Ingredient('Meat', 1),
-    //           new Ingredient('French Fries', 20)
-    //       ]),
-    //     new Recipe('Big fat Burger',
-    //      'This is simply a test', 
-    //      'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
-    //      [
-    //         new Ingredient('Buns', 2),
-    //         new Ingredient('Meat', 1)
-    //      ])
-    // ];   //of type Recipe array t.e. array of Recipes t.e. array of Recipe objects t.e. [{Recipe obj1},{Recipe obj 2 },...
+private recipes:Recipe[] = [
+        new Recipe('Tasty Snitzel',
+         'This is simply a test',
+          'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
+          [
+        //2''''add here in recipes[], add [] of some new Ingredien() in both (then go to repipes-detail comp)
+              new Ingredient('Meat', 1),
+              new Ingredient('French Fries', 20)
+          ]),
+        new Recipe('Big fat Burger',
+         'This is simply a test', 
+         'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg',
+         [
+            new Ingredient('Buns', 2),
+            new Ingredient('Meat', 1)
+         ])
+    ];   //of type Recipe array t.e. array of Recipes t.e. array of Recipe objects t.e. [{Recipe obj1},{Recipe obj 2 },...
 //2.(283)instead I wi/ll initialize private property recipes: Recipe[] to an empty array [].(so when app load, we will have no recipes loaded here)(go to Data Storage service)
-    private recipes: Recipe[] = [];
+    //private recipes: Recipe[] = [];
     //7.(lecture 123)Here we can inject ShopList service in the constrctor()
     constructor(private slService:ShoppingListService) {}
     //3.we can add/create getRecipes() method(public API) which can access to the private recipes[] (and here we can access to this method from outside and trough this method we can indirectly access to the private recipes[])
@@ -86,6 +86,14 @@ export class RecipesService {
         this.recipes[index] = newRecipe; //update/replace the existing/old one at the current index, replace/set with newRecipe:recipe 
     //10.(233)also in updateRecipe() do the same because our Recipe[] will change and I will here call our Subject obs that will emit/send value of our changed recipe[]/copy (go to recipe-list comp)
     this.recipesChanges.next(this.recipes.slice());
+    }
+    ////////////////234. Adding a Delete and Clear (Cancel) Functionality
+    //1(234)in Recipe service add deleteRecipe() method
+    deleteRecipe(index:number) { //we expect to get as argument the index:number of the recipe
+    //2(234)with splice() we can Remove the current Recipe(with the current index); splice(1st argument is the index, 2nd argument is the the number of removed items(1))
+        this.recipes.splice(index, 1); 
+    //3(234) after the array changed, call recipesChange subject observable and send/emit the new/changed/updated array(copy of this new/changed array) (go to recipes-detail template)
+        this.recipesChanges.next(this.recipes.slice());
     }
 
 

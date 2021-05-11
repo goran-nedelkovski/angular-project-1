@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Recipe } from '../recipes.model';
 import { RecipesService } from '../recipes.service';
 //164.///////////// Adding Editing Routes
@@ -18,7 +18,8 @@ export class RecipeEditComponent implements OnInit {
   recipeForm:FormGroup;
   //1.(165)inject route:ActivatedRoute in contructor()
   constructor(private route:ActivatedRoute, 
-    private recipesService:RecipesService) { }
+    private recipesService:RecipesService,
+    private router:Router) { }
 //////////////////165. Retrieving Route Parameters (retreive the id and then determine wheter we are in edit or not)
   ngOnInit(): void {
   //2.(165)here in ngOniInit I will retreive/get the id (and base on that id I will load this component)
@@ -65,6 +66,8 @@ export class RecipeEditComponent implements OnInit {
     else {
       this.recipesService.addRecipe(this.recipeForm.value);
     }
+    //8.(234)also here in Submit() I will call onCancel() because we have done at this point and we can navigate away
+    this.onCancel();
   //9.(233)but because when we get our Recipes in the Service we use .slice()/copy so, this recipe thatg we are using in component is not the same as that recipes in the Service)(because of slice()).So go in the recipesservice.ts and create a Subject observable (just like in a shoping-list service) 
   }
   ////////////////231.Adding new Ingredient Controls
@@ -130,6 +133,11 @@ export class RecipeEditComponent implements OnInit {
   //1.(229)"get the controls" logic (of my 'ingredients' FormArray)into a getter of my component code (the .ts file):
   get controls() {
     return (<FormArray>this.recipeForm.get('ingredients')).controls;
+  }
+//7.(234)Implement onCance() in the ts code also and here I want to navigate away t.e. I want to navigate up one level/one level back (['../'])(for that we need the router:Router, so inject it in the constructor)
+  onCancel() {
+    //7.in this method I want to navigate away t.e I want to navigate up one level/one level back (['../']) (for thatg we need the router:Router).That is the 1st arg, and 2nd argument is {relativeTo:this.route/activated Route}
+    this.router.navigate(['../'], {relativeTo: this.route});
   }
 
 }

@@ -16,7 +16,8 @@
                     type="submit" 
                     class="btn btn-success"
                     [disabled]="!recipeForm.valid">Save</button>
-                    <button type="button" class="btn btn-danger">Cancel</button>
+                <!--6.(234)add click listener for delete button also here in recipe-edit template-->
+                    <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
                 </div>
             </div>
             <div class="row">
