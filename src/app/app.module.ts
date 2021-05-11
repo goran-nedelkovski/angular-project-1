@@ -17,6 +17,7 @@ import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { AppRoutingModule } from './app-routing.module';
 import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
+import { RecipesService } from './recipes/recipes.service';
 //import { ServerComponent } from './server/server.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //import { ServersComponent } from './servers/servers.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //angular is split (contain) of many modules/packages(re-usable piece of code in a separate file), and if we want to use some features of that modules/packages, simpli do here with import {} in app.modules.ts 
@@ -44,7 +45,9 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
     AppRoutingModule, //import AppRoutingModule here in imports:[] and in the top
     HttpClientModule //3.(280)to can be used http:HttpClient, first we must import HttpClientModule here in imports:[] and import at the top from '@angular/common/http'
   ],
-  providers: [ShoppingListService],
+  ///////////////237. Providing the Recipe Service Correctly
+  //1.(237)instead here in recipes component, we must provide Recipe Service in app.module.ts (because here all child recipes components share this service instance, but when we navigate away to the shop-list, this recipes comp is destroyed)
+  providers: [ShoppingListService, RecipesService], 
   bootstrap: [AppComponent]  //starts our application by this root component, (which component will be recognize in the index.html file? => AppComponent)
 })
 export class AppModule { }

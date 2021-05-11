@@ -15,7 +15,7 @@
                     <button
                     type="submit" 
                     class="btn btn-success"
-                    [disabled]="!recipeForm.valid">Save</button>
+                    >Save</button>
                 <!--6.(234)add click listener for delete button also here in recipe-edit template-->
                     <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
                 </div>
@@ -37,17 +37,21 @@
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label for="imagePath">Image URL</label>
+        <!--236. Adding an Image Preview
+        1.(236)I will add a local reference #imagepath(that hold the input el), because I want to access to this input el here in the template-->   
                         <input 
                         type="text"
                         id="imagePath"
                         formControlName="imagePath"
-                        class="form-control">
+                        class="form-control"
+                        #imagePath>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <img src="" alt="" class="img-responsive">
+        <!--2(236)then I can bind here the [src] to that local Reference.value-->
+                    <img [src]="imagePath.value" alt="" class="img-responsive">
                 </div>
             </div>
             <div class="row">
