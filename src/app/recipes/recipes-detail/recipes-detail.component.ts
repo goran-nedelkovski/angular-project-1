@@ -55,6 +55,9 @@ export class RecipesDetailComponent implements OnInit {
 //5(234) Implement this onDeleteRecipe() in the ts code and call here deleteRecipe() from the RecipeService with this.id as argument (go to recipe-edit template)
   onDeleteRecipe() {
     this.recipesService.deleteRecipe(this.id);
+  ////////////////235. Redirecting the User (after Deleting a Recipe)
+//1(235)we go in recipe-detail comp(vecause here lives the delete button) and here in this method in the ts, we need to navigate away (navigate to /recipes)
+    this.router.navigate(['/recipes'], {relativeTo: this.route});
   }
   /////////////////168. One Note about Route Observables
   //1.(168)//when we use pre-defined(menaged) Observable from angular, we don't need to clean them(dont need to unsubscribe), but when I use my own created Obserbavles, at the end I must to clean them(to unsubscribe() to them)

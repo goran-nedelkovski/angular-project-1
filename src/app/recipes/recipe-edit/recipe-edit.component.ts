@@ -45,8 +45,7 @@ export class RecipeEditComponent implements OnInit {
     );
   }
   //5.I will add this method onSubmit() in my ts code and inside simply log to the console my recipeForm)
-  onSubmit() {
-    
+  onSubmit() {  
     ////////////////////233.Submit the form
     //1.(233)here in onSubmit() I dont want to print my form, but I want to save/add my form(recipe) in my array of recipes or update the existing one.(for that go to recipes.service.ts and create these 2 methods)
     //console.log(this.recipeForm);
@@ -62,7 +61,7 @@ export class RecipeEditComponent implements OnInit {
     //8.(233)(2nd way)instead of createing newRecipe obj/instance, we can do with shortend, t.e. we can pass as 2nd argument only this.recipeForm.value (and this obj will contain all the properties of my Recipe/all empty input fields, so its the same)  
       this.recipesService.updateRecipe(this.id, this.recipeForm.value);
     }
-    //7.(233)else if we are not in editMode, then add/save a new recipe in my recipes[] t.e. call addRecipe() from the Service and pass newRecipe obj/instance here as argument
+    //7.(233)else if we are not in editMode, then add/save a new recipe in my recipes[] t.e. call addRecipe() from the Service and pass newRecipe obj/instance here as argument (or we can pass as 2nd argument only this.recipeForm.value (and this obj will contain all the properties of my Recipe/all empty input fields, so its the same)  )
     else {
       this.recipesService.addRecipe(this.recipeForm.value);
     }
