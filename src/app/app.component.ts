@@ -51,3 +51,5 @@ export class AppComponent {
 
 //279. Backend (Firebase) Setup => log in (sign in) on Firebase.console with my google (gmail) account, then create/add new project -> enter project name: ng-course-recipe-book -> next -> checked all and Create new project
 //->then choose Realtime Database -> create Database -> choose realtime database location: Us(us-central1) or Belgium(europe-west1) -> Start in test mode (for now, without authentication(in test mode we can unlimited read and write access without auth..)..but we will add authentication soon in the next section) ->  Enable
+
+//Resolver=>specieal Guard, t.e. it is some code that is run/execute before loading the route, to make sure that the sertain data on this route depends on, is there on the route.add new file recipes-resolver.service.ts

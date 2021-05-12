@@ -15,7 +15,7 @@
                     <button
                     type="submit" 
                     class="btn btn-success"
-                    >Save</button>
+                    [disabled]="!recipeForm.valid">Save</button>
                 <!--6.(234)add click listener for delete button also here in recipe-edit template-->
                     <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
                 </div>
@@ -77,7 +77,7 @@
                     <div 
                     class="row" 
                     *ngFor="let ingredientCtrl of controls; let i = index"
-                    formGroupName="i">
+                    [formGroupName]="i">
                         <div class="col-xs-8">
                             <!--6.(230)we can add now formControllName for 2 inputs(name and amount)-->
                     <!--1.(231)add some style in input el-->
@@ -94,7 +94,12 @@
                             formControlName="amount">
                         </div>
                         <div class="col-xs-2">
-                            <button class="btn btn-danger">X</button>
+                <!--//////////283. Deleting Ingredients and Some Finishing Touches
+                1.(283)on x button add attribute type="button" and click()="onDeleteIngredient(current index i of the control)"-->
+                            <button
+                            type="button" 
+                            class="btn btn-danger"
+                            (click)="onDeleteIngredient(i)">X</button>
                         </div>
                     </div>  
                     <hr>

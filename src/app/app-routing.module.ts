@@ -10,6 +10,7 @@ import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.com
 import { RecipesComponent } from './recipes/recipes.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
+import { RecipesResolverService } from './recipes/recipes-resolver.service';
 //4.here at the top(under the imports) we add/create our routes (1st the main routs adn then 2nd the children routes)
     const appRoutes:Routes = [
         {
@@ -36,7 +37,9 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
             //3.(161)add new path-route with path:':id' (:id is dinamic parameter/segment, added relative after '/recipes' t.e. in url will look like:'/recipes/1 or /recipes/2').in this path I want to load/render RecipesDetail comp.this child component will be also render in the recipes .html(parent) with <router-outlet> 
                 {
                     path: ':id',
-                    component: RecipesDetailComponent
+                    component: RecipesDetailComponent,
+            //10.(284)apply here the resolve:[our Resolver Service] in these two paths(in path: ':id' and in path: ':id/edit') in app-routing.module.ts.And now, angular will run/execute this resolver before loading this routes
+                    resolve: [RecipesResolverService]
                 },
         //1.(164)to can add new Recipe and to add existing recipes, we need to create a new component(ng g c recipes/recipe-edit)
         //I will register the new route-path(relative child path in /recipes parent) here in app-rounting.module.ts(in ../recipes/new I want to load RecipeEdit comp)
@@ -45,7 +48,8 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
         //its the same component, and we will determine wheter we are on edit or not
                 {
                     path: ':id/edit', 
-                    component: RecipeEditComponent
+                    component: RecipeEditComponent,
+                    resolve: [RecipesResolverService]
                 },
                 {
                     path: 'recipes-list',

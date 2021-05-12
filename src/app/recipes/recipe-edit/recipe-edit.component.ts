@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ShoppingListService } from 'src/app/shopping-list/shopping-list.service';
 import { Recipe } from '../recipes.model';
 import { RecipesService } from '../recipes.service';
 //164.///////////// Adding Editing Routes
@@ -19,6 +20,7 @@ export class RecipeEditComponent implements OnInit {
   //1.(165)inject route:ActivatedRoute in contructor()
   constructor(private route:ActivatedRoute, 
     private recipesService:RecipesService,
+    private slService: ShoppingListService,
     private router:Router) { }
 //////////////////165. Retrieving Route Parameters (retreive the id and then determine wheter we are in edit or not)
   ngOnInit(): void {
@@ -84,6 +86,11 @@ export class RecipeEditComponent implements OnInit {
       })
     );
   }
+//2.(238)implement this method onDeleteIngredxient(i) in ts
+  onDeleteIngredient(index:number) { //we know that we will receive ghe index:number
+    //2.(238)here call this,recipeForm.get('ingredients') which is of type FormArray, and on this array call removeAt(index)
+    (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
+  }
   /////////////////227. Creating the Form For Editing Recipes
   //1.(227)after we created form's template, lets initial our form here in this ts method.Its important here to know wheter we are on edit mode or on new mode.first I will create a private method here in recipes-edit comp
   private initForm() { //3.(227)initial our form here with a value new FormGroup(to guve us the outer sheal/frame of our form,//pass js object with key:value pairs of the controls that I ant to register here)
@@ -138,5 +145,6 @@ export class RecipeEditComponent implements OnInit {
     //7.in this method I want to navigate away t.e I want to navigate up one level/one level back (['../']) (for thatg we need the router:Router).That is the 1st arg, and 2nd argument is {relativeTo:this.route/activated Route}
     this.router.navigate(['../'], {relativeTo: this.route});
   }
+
 
 }

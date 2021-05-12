@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Recipe } from '../recipes/recipes.model';
 import { RecipesService } from '../recipes/recipes.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 //2.(280)add @Injectable()->because we will inject the http Service into this Service (when we inject one service into another, I must use @Injectable(); @Injectable({providedIn:'root'}->this is the modern way, or we also can by add this service in the providers:[] in app.module.ts))
 @Injectable({providedIn: 'root'})
 //1.(280) lets export the dataStorageSrvice class
@@ -36,22 +36,26 @@ export class DataStorageService {
 //1.(282) create fetchRecipes() in our DataStorage Service, and this method will be trigger/fire when we click on fetch button (go to header component template)
     fetchRecipes() {
     //4.(282) return http.get('the argument is the same url-api endpoint'): Observable (). Where we can subscribe t.e. where are we interested/care about the response(about the loaded recipes)? We wont subscribe on the header component, because header component is not interested/not care about the response (we are not using recipes on the Header).So we will subscibe in this DataStorage Service
-        return this.http.get<Recipe[]>('https://ng-course-recipe-book-9f63a-default-rtdb.europe-west1.firebasedatabase.app/recipes.json')
+    //7.(284)we will no longer subscribe here in the service, but simply I will return this Observable and I will subscibe() in the Header comp (go to header comp.ts)
+    return this.http.get<Recipe[]>('https://ng-course-recipe-book-9f63a-default-rtdb.europe-west1.firebasedatabase.app/recipes.json')
     //3.(283)to prevent from some bugs(because we have no input some Ingredients, to not be empty that Ingredients array) we can add here pipe(map() to transform that data) to out fetchRecipes() after http.get()
         .pipe(map(recipes => { //3.we expect to get the recipes (but the recipes that might not have an Ingredients property)
             return recipes.map(recipe => { //3.here with map() method we will get each/every recipe item of that array
         //3.here we will return the tranformed recipe item/object with {...spread operator on the original recipe(with spread we can copy/unpacking the existing properties of the original recipe(without ingredients property), plus ingredients: recipe.ingredients with ternary operator //if its true ->recipe.ingrediens, else if its false ->[])}   
                 return {...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []};//3.here we will return the tranformed recipe item/object with {...spread operator on the original recipe(with spread we can copy, unpacking the existing properties of the original recipe)}
             }); //this map() is arrays's method (call on the recipes array, and the map() method allowed to transform the elements in that recipes array individual,t.e. transform/map every elements of that arrray)
+        }), //6.(284)add tap() operator in the pipe() (after the map() operator, and also import it from 'rxjs/operators') and with tap() we will get/fetch the recipes and we set the existing/old recipes in the page with these new fetched/loaded recipes (by calling the setRecipe(recipes) from the recipeService) 
+        tap(recipes => {
+            this.recipesService.setRecipes(recipes);
         }))
-        .subscribe(
-        //with <Recipe[]> we inform angular which will be the type of the extracted Responce body (return Recipe[])
-            recipes => { //we expect to get/receive our fetch/loaded recipes
-                //console.log(recipes);
-            //7.(282)here in subscibe() in data storage Service, call the injected Recipes Service and call setRecipes(with our fetched/loaded recipes as parameter)
-                this.recipesService.setRecipes(recipes);//7.now we can forward these new fetched/loaded recipes (to setRecipe() in Recipe service where we will overwrite/re-set the existing array of recipes with these new fetched/loaded array of recipes)
-            }
-        );
+        // .subscribe(
+        // //with <Recipe[]> we inform angular which will be the type of the extracted Responce body (return Recipe[])
+        //     recipes => { //we expect to get/receive our fetch/loaded recipes
+        //         //console.log(recipes);
+        //     //7.(282)here in subscibe() in data storage Service, call the injected Recipes Service and call setRecipes(with our fetched/loaded recipes as parameter)
+        //         // this.recipesService.setRecipes(recipes);//7.now we can forward these new fetched/loaded recipes (to setRecipe() in Recipe service where we will overwrite/re-set the existing array of recipes with these new fetched/loaded array of recipes)
+        //     }
+        // );
         //4.(282)we can subscibe here in DataStorage service where we are injecting Recipes Service, because maybe we can do something with the Recipes Service, to push/move the loaded/fetched recipes in that Recipes service which in the end is the place where we menage our Recipes.
     //4(282)we should Set our existing array of recipes/our currently loaded Recipes(in the Recipes service) equal to these onces(to these fetched recipes), to overwright/re-set them to these fetched recipes.(to do that, go to recipes.service)
         //4(282.)btw Subscribe where?->where are we interested/care about the response(about the loaded recipes)? We wont subscribe on the header component, because header component is not interested/not care about the response (we are not using recipes on the Header).So we will subscibe here in this DataStorage Service

@@ -37,8 +37,9 @@ export class HeaderComponent implements OnInit {
   }
 //3.(282)//add this onFecthData() on header.comp. ts and there we can accces to that method fetchRecipes() trough the injected DataStorage Service 
   onFetchData() {
-    this.dataStorageService.fetchRecipes();
-    
+  //8.(284)we will subscribe() here in onFetchData() in header comp.ts
+    //8.in subscribe() we dont need to pass a function if we are not interested/not care about the response (go to recipes-resolver.service)
+  this.dataStorageService.fetchRecipes().subscribe();
   }
 
   // ngOnDestroy() {

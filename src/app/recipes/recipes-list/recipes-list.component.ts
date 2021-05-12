@@ -1,5 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 //import * as EventEmitter from 'node:events';
 import { Recipe } from '../recipes.model'; //to inform typeScript we must import Recipe model class here
 import { RecipesService } from '../recipes.service';
@@ -9,8 +10,9 @@ import { RecipesService } from '../recipes.service';
   templateUrl: './recipes-list.component.html',
   styleUrls: ['./recipes-list.component.css']
 })
-export class RecipesListComponent implements OnInit {
-//7.create new own custom event (this is 2nd custom event, that will be emitted to the main parent recipe),and EventEmitter will be of type Recipe(we pass Recipe here, because this information need it on the recipe parent in the end) 
+export class RecipesListComponent implements OnInit, OnDestroy {
+ private subscription:Subscription;
+  //7.create new own custom event (this is 2nd custom event, that will be emitted to the main parent recipe),and EventEmitter will be of type Recipe(we pass Recipe here, because this information need it on the recipe parent in the end) 
   //@Output() recipeWasSelected = new EventEmitter<Recipe>();
   recipes:Recipe[]; //6'.this will be undefined initialy, because we have already manage this recipes[] in RecipeService class
   //   new Recipe('A Test Recipe', 'This is simply a test', 'https://rasamalaysia.com/wp-content/uploads/2020/02/honey-garlic-salmon2.jpg'),
@@ -26,7 +28,8 @@ constructor(private recipesService:RecipesService,
 
   ngOnInit(): void {
   //11(233)now in my recipe-list component I want to subscibe/listen to my Subject observable(here in this component because here we are get the recipes )
-    this.recipesService.recipesChanges.subscribe(
+    //3.(283)we need to unsubscribe here in recipe-list comp when we want to leave this comp.So 1st implement OnDestroy interface, 2nd create a private property:Subscription and store this subscribe code in that property and 3rd in ngOnDestroy unsubscibe() on this subscription property.
+    this.subscription = this.recipesService.recipesChanges.subscribe(
       (recipes:Recipe[]) => {
         this.recipes = recipes;
       }
@@ -50,4 +53,8 @@ constructor(private recipesService:RecipesService,
   onNewRecipe() {
       this.router.navigate(['new'], {relativeTo:this.route});//we are alreadu in /recipes, so I will use 'new'(relative path to that apsolute path /recipes)(next we need to do the same with edit link, so go to recipes-detail)
   }
+  ngOnDestroy():void {
+    this.subscription.unsubscribe();
+  }
+
 }
