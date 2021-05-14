@@ -12,8 +12,11 @@
                 <input type="password" id="password" class="form-control">
             </div>
             <div>
-                <button class="btn btn-primary">Sign Up</button> | 
-                <button class="btn btn-primary">Switch to Login</button>
+        <!--4.(288)here in 1st button we want to output dinamic text('login' or 'SignnUp') with sring interpolation {{and here with Ternary operator we can check if isLoginMode === true ? 'Login' : 'SignUp' //so if we are on LoginMode(if its set to true), then output 'Login' text on the button or if we are not on LoginMode(if its set to false), then output 'SignUp' text on the button}}
+        4.(288)on this 1st button add attribute type="submit" because this bitton will submit the form-->
+                <button class="btn btn-primary" type="submit">{{ isLoginMode ? 'Login' : 'SignUp' }}</button> | 
+        <!--3.(288)on 2nd button add (click)="onSwithcMode() and add type="button"() ->so, doesn't submit the form this button" listener.Add dinamic text ('signUp' or 'login') with ternary operator check, if we are in loginMode, then switch to 'signUp' mode (oposite, with !-negation) and if we are on signUpMode then switch to 'login'--> 
+                <button class="btn btn-primary" (click)="onSwitchMode()">Switch to {{ isLoginMode ? 'SignUp' : 'Login' }}</button>
             </div>
         </form>
     </div>
