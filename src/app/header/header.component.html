@@ -15,6 +15,8 @@
             //we need to dinamicaly add the bootstrap class="active" in the both li items->with directive routerLinkActive="active"-->
             <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a></li>
                 <!--onSelected('recipe', $event) =>this method can received one more arg/parameter and that would be $event obj.$event always refer/point to the event's data that we pass in our method as input value (refer/point to 'recipe')-->
+ <!--3.(287)here in the header template lets add a new link with routerLink to /auth page (so trough a link navigation we can go to the auth page)-->
+            <li routerLinkActive="active"><a routerLink="/auth">Authenticate</a></li>
                 <!-- <li><a href="#" (click)="onSelect('shopping-list')">Shopping List</a></li> -->
                 <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
             </ul>

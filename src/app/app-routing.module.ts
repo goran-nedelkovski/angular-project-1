@@ -11,6 +11,7 @@ import { RecipesComponent } from './recipes/recipes.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { RecipesResolverService } from './recipes/recipes-resolver.service';
+import { AuthComponent } from './auth/auth.component';
 //4.here at the top(under the imports) we add/create our routes (1st the main routs adn then 2nd the children routes)
     const appRoutes:Routes = [
         {
@@ -71,7 +72,11 @@ import { RecipesResolverService } from './recipes/recipes-resolver.service';
                 }
             ]
         },
-
+//2.(287)here in app-rounting.module I want to register a new route with path:'auth' which loads/render the auth page/comp (auth page with email and password) (gp to header.comp.html)
+        {
+            path: 'auth', 
+            component: AuthComponent
+        }
         // {
         //     path: '**',
         //     redirectTo: 'recipes'
