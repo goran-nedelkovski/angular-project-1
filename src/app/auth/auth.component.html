@@ -2,19 +2,42 @@
 2.(287)lets create the template form of the auth comp/page.(go to app-routing.module.ts)-->
 <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
-        <form>
+<!--2.(289)with #localReference we can acces to the form object anywhere in the template code(that form object angular creates automaticaly for us with "ngForm")(#authForm, that hold whole my form element)="ngForm";//now we can access to authForm object anywhere in the template-->
+<!--3.(289)for sumbit the form with (ngSubmit)=onSubmit(pass as argument authForm local reference object, t.e. send/submit our entire form trough that authForm local ref object that holds our form(we can pass as argument also authForm.value but here I will submit entire form with authForm as argument))--> 
+<form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+    <!--/////////////289. Handling Form Input
+    1.(289)we can do here with 1st way with TD:Template Driven from (but I can feel free to use the 2nd way with Reactve form)
+1.(289)on each input elements, 1st add ngModel, 2nd add name="email", 3rd add 'required' for validate of this fields(must be filled, t.e. mustg not be empty), and 4th add 'email' validator-->
             <div class="form-group">
                 <label for="email">E-mail:</label>
-                <input type="email" class="form-control" id="email">
+                <input 
+                type="email"
+                class="form-control" 
+                id="email" 
+                ngModel
+                name="email"
+                required>
             </div>
+<!--1.(289)on each input elements, 1st add ngModel, 2nd add name="password", 3rd add 'required' for validate of this fields(must be filled, t.e. mustg not be empty), and 4th add 'minLength'="6" validator-->
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" class="form-control">
+                <input 
+                type="password" 
+                id="password" 
+                class="form-control"
+                ngModel
+                name="password"
+                required
+                minlength="6">
             </div>
             <div>
         <!--4.(288)here in 1st button we want to output dinamic text('login' or 'SignnUp') with sring interpolation {{and here with Ternary operator we can check if isLoginMode === true ? 'Login' : 'SignUp' //so if we are on LoginMode(if its set to true), then output 'Login' text on the button or if we are not on LoginMode(if its set to false), then output 'SignUp' text on the button}}
         4.(288)on this 1st button add attribute type="submit" because this bitton will submit the form-->
-                <button class="btn btn-primary" type="submit">{{ isLoginMode ? 'Login' : 'SignUp' }}</button> | 
+      <!--3(289)we can use that #local Reference in this 1st button, with directive[disabled] if our form(authForm local Reference) is not valid t.e. [disabled]="!authForm.valid"--> 
+             <button 
+             class="btn btn-primary" 
+             type="submit" 
+             [disabled]="!authForm.valid">{{ isLoginMode ? 'Login' : 'SignUp' }}</button> | 
         <!--3.(288)on 2nd button add (click)="onSwithcMode() and add type="button"() ->so, doesn't submit the form this button" listener.Add dinamic text ('signUp' or 'login') with ternary operator check, if we are in loginMode, then switch to 'signUp' mode (oposite, with !-negation) and if we are on signUpMode then switch to 'login'--> 
                 <button class="btn btn-primary" (click)="onSwitchMode()">Switch to {{ isLoginMode ? 'SignUp' : 'Login' }}</button>
             </div>

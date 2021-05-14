@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 //////////////////286.How authentication works
 //1.(286)Client send auth data to the server.Server is Restful Api and it dont know the client(not care about client).Client-server communicate through http:HttpClient req/res. So 1st we check on the client side validation of the credentials(validation of username and password), and this auth data we send to the server.The server also check if the username and password are valid and if the are valied, the server create Token (with secret algoritams) and send that token to the client.That Token is encoded JSON String(not encripted).Client stores that Token in the Stogare(In the Browser's Local Storage).And this token will be attached on any request(attached on the header like query params itn..) send to the server and these request must be authenticated/authorize.
 //////////////////287. Adding the Auth Page
@@ -21,5 +22,9 @@ export class AuthComponent implements OnInit {
   onSwitchMode() {
     //this.isLoginMode = false; 
     this.isLoginMode = !this.isLoginMode;//2.now we need to connect/bind onSwitchMode() and isLogin property with our Template (go to auth.comp.html template)
+  }
+//4.(289)add onSubmit() on the ts, and here as argument we expect to receive that form object form:NgForm (import it from @ang/forms)
+  onSubmit(form: NgForm) {
+    console.log(form.value);//console.log the value of the form object
   }
 }
