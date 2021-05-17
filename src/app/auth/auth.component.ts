@@ -14,7 +14,10 @@ export class AuthComponent implements OnInit {
 ///////////////288. Switching Between Auth Modes
 //1.(288)to can swithch between auth modes(login and logout), here in auth comp ts we neet to manage the currently active mode.So lets create a property isLoginMode (boolean) and its initialy set to true
   isLoginMode = true; //initialy set to true
-
+//3.(294)we can use this spinner in auth.component and there I want to hide the entire form while we are currently loading the spinner
+//3.(294)for that here in auth.comp.ts I will create a property isLoading and set to false initialy
+  isLoading = false;
+  error: string = null; //8.(294)also I want to show error message in alert box if we have an arror t.e. if we have a problem with login.for that I will create error property to store the error:string messagge and initialy set to null
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -36,6 +39,8 @@ export class AuthComponent implements OnInit {
   //1.(293)here in onSubmit before form.reset, first I want to extract my email and password , t.e. to get the values of the email and password and store in variabvles(with form.value.email and form.value.password)
     const email = form.value.email;
     const password = form.value.password;
+  //4.(294)add here in onSubmit() right befor sendich the form, re-set isLoading to true.
+    this.isLoading = true;
   //4.(293) check if we are in isLoginMode then here will be SignIn() logic (here we can't do nothing for now, because we did't add singIn logic yet, we only added signUp logic) and else (if we are not on isLoginMode then, here will be signUp logic)
     if(this.isLoginMode) {
       // ... //here will be the signIn() logic
@@ -46,13 +51,21 @@ export class AuthComponent implements OnInit {
     this.authService.signUp(email, password).subscribe(
       resData => {//we expect to receive resData:AuthResponseData interface(response data payload, as success response)
         console.log(resData)
+      //5.(294)here as soon as we are done with sending the form(t.e. when we get the response), set back isLoading to false (in both case, in the success case and in the error case)
+        this.isLoading = false;
       }, error => { //2nd argument in subscribe will be error callback (if we get an error obj)
         console.log(error)
+      //8.(294)also I want to show error message if we get an arror here t.e. if we have a problem with login.for that I will create error property to store the error:string messagge and initialy set to null and here we get the error.message and store to that error:string property (go to the template)
+        this.error = 'An error occur';
+        //5.(294)here as soon as we are done with sending the form(t.e. when we get the response), set back isLoading to false (in both case, in the success case and in the error case)
+        this.isLoading = false;
+    //6.(294)now isLoading property we can use in the template to hide the form
       });
     }
   //5.(239)we can see in the console(if we signUp, switch to signUp) the new registered User object and we can se that registered User in firebase.com -> Authenticate -> Users (Refresh)).But if we input the exactly email and password (or at least the same email) we get an error because thatg User already exists
     form.reset();//after sending/sumbiting the form, reset the form with form.reset() like at the begining with empty fields.
   }
+
 /////////////////290. Preparing the Backend
 //1.(290)in our firebase.console project, go to Authentication page -> -> Get started -> set up Sing In method (in Users). before we do that, lets go to the Database(Realtime Database)-> Rules -> and for ".read" and '.write' set 'auth != null' t.e. this: ".read": "auth != null",".write": "auth != null" -> Publish//this will tell firebase, that only authenticate users can read and write our data ;//now if we fetch recipes, we see error in the console(401, nort authorize)
 //2.(290)go back to our firebase.console project, go to Authentication page to enable the authentication and to add some logic to be able to visit our authenticate routes again-> Get started -> set up Sing In method (in Users) ->choose Emial/password -> click Enable(only the 1st one at the top)->Save (now we have firebase biuld-In authentication active, where you can send request to sertain api-endpoint to create Users and logged the users in.//and you can see the Users in the Users tab (Authentication->Users))
@@ -61,4 +74,9 @@ export class AuthComponent implements OnInit {
 //So in case you deleted those (or never added any), make sure you do add some recipes before you turn on protection as shown in the last lecture!
 ////////////////292. Preparing the Signup Request
 //1.(292)google -> Firebase Auth Rest Api (that firebase offer to you, for create users and login users).here we need only two methods(see th links on the right side): SignUp with email and password and signIn with email and password (these 2 links).and lets start 1st with link SignUp..we see the endpoint(url to which we send our request) and (under that url) we send that request with request body payload(request body data: email, password and returnSecureToken:true). Request is POST (we can see that above the url),And as response we get/receive an useId(firebase creates unique id for each user), tokenId (type:string, that is A Firebase Auth ID token for the newly created user), expiresIn:	string	(the number of seconds in which the ID token expires;//we can see all of these info in the documentation of firebase auth rest api).(go to auth folder and create auth.serfvice.ts //we need this new service that can dial with this auth request)
+///////////////294. Adding a Loading Spinner & Error Handling Logic
+//1.(294)Google->css loading spinners -> https://loading.io ->grab one of them(click) and copy all css code and with terminal in the shared forlder create a new component loading-spinner(:ng g c shared/loading-spinner)  paste the css code in the loading-spinner.comp.css file and change the color wrom white to blue.(or 2nd way-manuely create new folder in the shared folder 'loading-spinner'-> loading-spinner.component.ts...) (go to loadin-spinner.comp.ts file)
+//2.(294)in the ts file, we have exported this class LoadinSpinnerComponent and add decorator @Component({ selector: 'app-loading-spinner', templateUrl:'copy the html code for that spinner and paste here'}, stylesUrl:['']) (make sure that this component is added in app.module -> in declarations)
+  //3.(294)we can use this spinner in auth.component and there I want to hide th entire form while we are currently loading the spinner
 }
+

@@ -4,7 +4,16 @@
     <div class="col-xs-12 col-md-6 col-md-offset-3">
 <!--2.(289)with #localReference we can acces to the form object anywhere in the template code(that form object angular creates automaticaly for us with "ngForm")(#authForm, that hold whole my form element)="ngForm";//now we can access to authForm object anywhere in the template-->
 <!--3.(289)for sumbit the form with (ngSubmit)=onSubmit(pass as argument authForm local reference object, t.e. send/submit our entire form trough that authForm local ref object that holds our form(we can pass as argument also authForm.value but here I will submit entire form with authForm as argument))--> 
-<form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+<!--9.(924)add new div.alert.alert-danger (with alert classes to show nice alert view of the error message) and in p tag we output in {{}} that error message text property. but first check if error is set(if error property exist t.e. if we have some error message)-->
+<div class="alert alert-danger" *ngIf="error">
+    <p>{{error}}</p>
+</div>
+<!--7.(294)if we are loading the spinner(if="isLoading"), then I want to show the spinner(we can the same with if-else in the form element).so I will add div elemtn and in this div, I will add the selector tag of the spiineer(here the spinner will render/loads in this selector tag)-->
+<div *ngIf="isLoading" style="text-align: center;">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+<!--//6.(294)now isLoading property we can use in the template to hide the form.with *ngIf="!isLoading" the form will show up if we not loading the spinner-->
+<form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
     <!--/////////////289. Handling Form Input
     1.(289)we can do here with 1st way with TD:Template Driven from (but I can feel free to use the 2nd way with Reactve form)
 1.(289)on each input elements, 1st add ngModel, 2nd add name="email", 3rd add 'required' for validate of this fields(must be filled, t.e. mustg not be empty), and 4th add 'email' validator-->
@@ -42,5 +51,6 @@
                 <button class="btn btn-primary" (click)="onSwitchMode()">Switch to {{ isLoginMode ? 'SignUp' : 'Login' }}</button>
             </div>
         </form>
+
     </div>
 </div>
