@@ -5,8 +5,9 @@
 
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError } from "rxjs/operators";
-import { throwError } from 'rxjs';
+import { catchError, tap } from "rxjs/operators";
+import { Subject, throwError } from 'rxjs';
+import { User } from "./user.model";
 //9.(292)lets create a new interface AuthResponseData(no need to export) for the response data that we get back from the api t.e. <the Response data that we get back/retrieve with the post<AuthResponseData>()>(see the Response payload from the documentation)(good practice is to create an interface, which is very helpful when we work with the response data)
 export interface AuthResponseData {
     idToken: string,
@@ -20,6 +21,8 @@ export interface AuthResponseData {
 //3.(292)export this class Auth Service and add @Injectable({providedIn:'roto'}0import it from @ang/core)
 @Injectable({ providedIn: 'root' }) //if we inject service into a service like here, we need to add @Injectable()
 export class AuthService {
+//4.(298)here in Auth Service I want to store the Authenticate User (Userf model class), store as a Subject observable(//the idea is to emit/send a new user with subject.next(new user) when we have one/login or also when we logout/when we clear the user/when the user is invalid/when token expired)
+     user = new Subject<User>();//4'(298) Subject<is gerenic type, so the type of the data that this obs returns at the end is Userf model class> (import the Subject from 'rxjs' and import the User from user.model.ts)
     //5.(292)we need http:HttpClient to send that requests.inject it in the constructor
     constructor(private http: HttpClient) { }
     //4.(292)add signUp()/register method.This method should send our request to that signUp url(to signUp endpoint)
@@ -40,7 +43,25 @@ export class AuthService {
                 //2.so use pipe(operator catchError()//import it from rxjs/operators).also we will need to import 'thwowError' function from 'rxjs' (which will create a new Obserbable that wraps an error);
             })
     //3.(297)here in pipe(operator catchError(paste here this.handleError private method as argument))
-         .pipe(catchError(this.handleError))
+         .pipe(catchError(this.handleError),
+    //5.(298)add a tap() operator in pipe() //import tap from 'rxjs/operators')//tap() does not change the response(not block the code, not stop, not change), but just do run/execute some code with the data that we get back from that Observable/with the response
+         tap(resData => {
+    //10.(298)here in tap() call our private handleAuthenticate(with the expected parameters base on resData...//+resData.expiresIn (with + we convert to a number))(copy the all tap() operator and paste also in login pipe())
+                this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
+    // //6.(298) _tokenExpirationDate:Date is of type Date and its not part of our Response, but we need to generate that.so, here add new variable expirationDate
+    //         const expirationDate = new Date(new Date().getTime() + resData.expiresIn * 1000); //new js Date object, base on that ExpiresIn time that we get back from Firebase
+    //     //6'(298) new Date(current Date with new Date().getTime()=current TimeStamps in miliseconds since the beginning of time + resData.expiredIn property that we get back from the Firebase(eith + we has converted to a number * 1000 to miliseconds))
+    // //5'(298) here in tap() I want to create my new User (user=new User(the arguments of the constructor requires, base on resData object interface that we get) obj/incatnce user of the User class)
+    //         const user = new User(
+    //             resData.email, 
+    //             resData.localId, 
+    //             resData.idToken, 
+    //             expirationDate);
+    //     //6''.(298)pass that expirationDate object in the User constructor as the last argument.So this will construct/biuld the user with the resDate that we get back
+    //     //7.(298) now we can use the Subject observable to send/emit/next that created user t.e. next our currently loggedIn user in our app
+    //             this.user.next(user); //this is our currently loggedIn user in our app
+    })
+    );
         //3.(295).we expect to get.receive the same errorRes and inside paste the code for switch(all error handling logic I wan to be here in the service, not in the component)
         //     //4.(295)add new variable here errorMessage and set initialy to some default error message
         //     let errorMessage = 'An unknown error occured.' 
@@ -69,9 +90,44 @@ export class AuthService {
                 returnSecureToken: true
             })
         //4'.(297)we can use the same pipe(catchError(this.handleError)) also on our login() function
-            .pipe(catchError(this.handleError))
+            .pipe(catchError(this.handleError),
+        //11.(298)copy the tap() operator and paste also here in pipe() for our login() logic/route
+            tap(resData => {
+                //10.(298)here in tap() call our private handleAuthenticate(with the expected parameters base on resData...//+resData.expiresIn (with + we convert to a number))  
+                            this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
+                // //6.(298) _tokenExpirationDate:Date is of type Date and its not part of our Response, but we need to generate that.so, here add new variable expirationDate
+                //         const expirationDate = new Date(new Date().getTime() + resData.expiresIn * 1000); //new js Date object, base on that ExpiresIn time that we get back from Firebase
+                //     //6'(298) new Date(current Date with new Date().getTime()=current TimeStamps in miliseconds since the beginning of time + resData.expiredIn property that we get back from the Firebase(eith + we has converted to a number * 1000 to miliseconds))
+                // //5'(298) here in tap() I want to create my new User (user=new User(the arguments of the constructor requires, base on resData object interface that we get) obj/incatnce user of the User class)
+                //         const user = new User(
+                //             resData.email, 
+                //             resData.localId, 
+                //             resData.idToken, 
+                //             expirationDate);
+                //     //6''.(298)pass that expirationDate object in the User constructor as the last argument.So this will construct/biuld the user with the resDate that we get back
+                //     //7.(298) now we can use the Subject observable to send/emit/next that created user t.e. next our currently loggedIn user in our app
+                //             this.user.next(user); //this is our currently loggedIn user in our app
+                }))
         //4'.(297)this handle Error function runs for both Observables related to signUp and the Observables for login
     }
+//8.(298)as the error Handling before, we need the same logic for our loogedIn user, to handle.So I will add private method
+    private handleAuthentication(email:string, userId:string, token:string, expiresIn:number) {//we expect to get these arguments
+//9(298)copy and paste here the code from tap().here remove the resData and replace the Users parameters with these paameters of the function 
+        //6.(298) _tokenExpirationDate:Date is of type Date and its not part of our Response, but we need to generate that.so, here add new variable expirationDate
+        const expirationDate = new Date(new Date().getTime() + expiresIn * 1000); //new js Date object, base on that ExpiresIn time that we get back from Firebase
+        //6'(298) new Date(current Date with new Date().getTime()=current TimeStamps in miliseconds since the beginning of time + resData.expiredIn property that we get back from the Firebase(eith + we has converted to a number * 1000 to miliseconds))
+    //5'(298) here in tap() I want to create my new User (user=new User(the arguments of the constructor requires, base on resData object interface that we get) obj/incatnce user of the User class)
+            const user = new User(
+                email, 
+                userId, 
+                token, 
+                expirationDate);
+        //6''.(298)pass that expirationDate object in the User constructor as the last argument.So this will construct/biuld the user with the resDate that we get back
+        //7.(298) now we can use the Subject observable to send/emit/next that created user t.e. next our currently loggedIn user in our app
+                this.user.next(user); //this is our currently loggedIn user in our app
+    }
+
+
     //////////////297. Login Error Handling
     //1.(297)it would be nice to share that error handling logic between both Observables(in login and signUp/register) in some private method in the Service
     //1.(297) lets create a new private method here in the Auth Service (private because it will be used only in the service)
@@ -101,3 +157,4 @@ export class AuthService {
         //3.(297)now with this method we have the central place for error handling logic, and now go to signUp() to pipe(catchError(paste here this.handleError private method))
     }
 }
+
