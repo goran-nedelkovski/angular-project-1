@@ -3,49 +3,101 @@
 //2.(292)go to auth folder and create auth.serfvice.ts //we need this new service that can dial with this auth request)
 //2.this auth.service will be responsible for Sign Up the user, signIn the user and manage the token
 
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { catchError } from "rxjs/operators";
+import { throwError } from 'rxjs';
 //9.(292)lets create a new interface AuthResponseData(no need to export) for the response data that we get back from the api t.e. <the Response data that we get back/retrieve with the post<AuthResponseData>()>(see the Response payload from the documentation)(good practice is to create an interface, which is very helpful when we work with the response data)
- export interface AuthResponseData {
-    idToken: string, 
-    email: string, 
-    refreshToken: string, 
+export interface AuthResponseData {
+    idToken: string,
+    email: string,
+    refreshToken: string,
     expiresIn: string,
     localId: string,
     //2.(296)response Data Payload for login(signIn) is almost the same (plus registered property:boolean)..So, to be able to use the same Interface, I will add plus registered property with ? (optional, because signUp() will not use that, but login() will use this registered property) 
     registered?: boolean
 }
 //3.(292)export this class Auth Service and add @Injectable({providedIn:'roto'}0import it from @ang/core)
-@Injectable({providedIn:'root'}) //if we inject service into a service like here, we need to add @Injectable()
+@Injectable({ providedIn: 'root' }) //if we inject service into a service like here, we need to add @Injectable()
 export class AuthService {
-//5.(292)we need http:HttpClient to send that requests.inject it in the constructor
-    constructor(private http:HttpClient) {}
-//4.(292)add signUp()/register method.This method should send our request to that signUp url(to signUp endpoint)
-//4.(292) signUp(expect to receive as parameters/input values email:string, password:string) 
-    signUp(email:string, password:string) { //4.expect to receive as parameters/value email:string, password:string
-//6.(292)here in signUp send http.post() request to that signUp url with {request body payload data: email, password, returnSercureToken:true}
- //8.(292)return this prepared Observable (to can subscribe() in the auth.component.ts which is might be interested/care of getting the response of that)       
-   //10.(292)in post<generic type>() define the type of Response data that we get back from the api t.e. the type/format of the Response body data t.e post<AuthResponseData>()
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBKqQxisoIf6sBjIh0JV7xO126_N7tE4JU',
-    //6.(292)that API_KEY later we should replace with my firebase API key.we can find that firebase Api key in firebase.console -> in project settings(in the settings icon at the top-left)->web API key: ... copu-paste this key here(replace the API_KEY including the [] with this web api key from my firebase)
-        {
-//7.(292)on the request(because its post request), attach js object here with 3 properties (see from the documentation, t.e. from the request body payload.;//these info the backend requires)
-//7.(292)asign email parameter/value to the email property and asign password parameter/value to password property(the properties names must be the same as in the documentation of firebas auth rest api)
-            email: email, //email key/property: gets email parameter/value//asign email parameter/value to the email property
-            password: password, //password key/property: gets password parameter/value//asign password parameter/value to password property
-            returnSecureToken: true //also Api expect returnSecureToken and set to true(always, as shown in the documentation)
-        });
+    //5.(292)we need http:HttpClient to send that requests.inject it in the constructor
+    constructor(private http: HttpClient) { }
+    //4.(292)add signUp()/register method.This method should send our request to that signUp url(to signUp endpoint)
+    //4.(292) signUp(expect to receive as parameters/input values email:string, password:string) 
+    signUp(email: string, password: string) { //4.expect to receive as parameters/value email:string, password:string
+        //6.(292)here in signUp send http.post() request to that signUp url with {request body payload data: email, password, returnSercureToken:true}
+        //8.(292)return this prepared Observable (to can subscribe() in the auth.component.ts which is might be interested/care of getting the response of that)       
+        //10.(292)in post<generic type>() define the type of Response data that we get back from the api t.e. the type/format of the Response body data t.e post<AuthResponseData>()
+        return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBKqQxisoIf6sBjIh0JV7xO126_N7tE4JU',
+            //6.(292)that API_KEY later we should replace with my firebase API key.we can find that firebase Api key in firebase.console -> in project settings(in the settings icon at the top-left)->web API key: ... copu-paste this key here(replace the API_KEY including the [] with this web api key from my firebase)
+            {
+                //7.(292)on the request(because its post request), attach js object here with 3 properties (see from the documentation, t.e. from the request body payload.;//these info the backend requires)
+                //7.(292)asign email parameter/value to the email property and asign password parameter/value to password property(the properties names must be the same as in the documentation of firebas auth rest api)
+                email: email, //email key/property: gets email parameter/value//asign email parameter/value to the email property
+                password: password, //password key/property: gets password parameter/value//asign password parameter/value to password property
+                returnSecureToken: true //also Api expect returnSecureToken and set to true(always, as shown in the documentation)
+                //2(295).its noot good practice in the component this error handling logic(because the component is care about updating the UI, and not the handle logic).This handle logic we can move here in the Service with rxjs/operators in our Observable chain.so use pipe(operator catchError()//import it from rxjs/operators).also we will need to import 'thwowError' function from 'rxjs';
+                //2.so use pipe(operator catchError()//import it from rxjs/operators).also we will need to import 'thwowError' function from 'rxjs' (which will create a new Obserbable that wraps an error);
+            })
+    //3.(297)here in pipe(operator catchError(paste here this.handleError private method as argument))
+         .pipe(catchError(this.handleError))
+        //3.(295).we expect to get.receive the same errorRes and inside paste the code for switch(all error handling logic I wan to be here in the service, not in the component)
+        //     //4.(295)add new variable here errorMessage and set initialy to some default error message
+        //     let errorMessage = 'An unknown error occured.' 
+        // //5.(295)check if we dont have error or error.error properties of errorRes object, then return throwError(errorMessage, the default initial messge)
+        // if(!errorRes.error || !errorRes.error.error) {
+        //     return throwError(errorMessage); //throwError Observable with that error message value 
+        // }
+        // //1.(295) else if we have the message property of errorRes object, then switch to that property with switch
+        //   switch (errorRes.error.error.message) { //in switch statement we will have only one case "EMAIl_EXISTS": errorMessage = 'new error message'
+        //     //5.(295) here I will overwrite/reasign that variable to this error message
+        //     case 'EMAIL_EXISTS': errorMessage = 'This email already exists';
+        //   //2(295).its noot good practice in the component this error handling logic(because the component is care about updating the UI, and not the error handle logic).This handle logic we can move in the Service with rxjs/operators
+        //   }
+        // //6.(295) out of the switch block, we can return throwError observabe with that new errorMessage value
+        //   return throwError(errorMessage);
+        //     }));
     }
-///////////////////296. Sending Login Requests
-//1.(296)lets create login(receive email:string and password:string as parameters) in auth.service.we can see the signIn method with email and password how will look like in google->Firebase Auth Rest Api documentation; http.post('1st arguments is url..copy-paste the url(api endpoint and replace that [API_KEY] including the [] with our Web Api key in project_settings), 2nd argument is request body payload is with email, password and returnSecureToken(the same as before, copya and paste them in a js object {} as second argument)
+    ///////////////////296. Sending Login Requests
+    //1.(296)lets create login(receive email:string and password:string as parameters) in auth.service.we can see the signIn method with email and password how will look like in google->Firebase Auth Rest Api documentation; http.post('1st arguments is url..copy-paste the url(api endpoint and replace that [API_KEY] including the [] with our Web Api key in project_settings), 2nd argument is request body payload is with email, password and returnSecureToken(the same as before, copya and paste them in a js object {} as second argument)
     login(email: string, password: string) {
-    //3.(296) in post<here define the type of the data that we get back from the api and that is AuthResponseData interface object>. finaly we need to 'return' this prepared Observable (to can subscribe() to our auth.component that is interested/care about the response) 
-        return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBKqQxisoIf6sBjIh0JV7xO126_N7tE4JU', 
-        {
-            email: email,
-            password: password,
-            returnSecureToken: true
-        });
+        //3.(296) in post<here define the type of the data that we get back from the api and that is AuthResponseData interface object>. finaly we need to 'return' this prepared Observable (to can subscribe() to our auth.component that is interested/care about the response) 
+        return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBKqQxisoIf6sBjIh0JV7xO126_N7tE4JU',
+            {
+                email: email,
+                password: password,
+                returnSecureToken: true
+            })
+        //4'.(297)we can use the same pipe(catchError(this.handleError)) also on our login() function
+            .pipe(catchError(this.handleError))
+        //4'.(297)this handle Error function runs for both Observables related to signUp and the Observables for login
     }
-
+    //////////////297. Login Error Handling
+    //1.(297)it would be nice to share that error handling logic between both Observables(in login and signUp/register) in some private method in the Service
+    //1.(297) lets create a new private method here in the Auth Service (private because it will be used only in the service)
+    private handleError(errorRes: HttpErrorResponse) {
+        //1.(297)expect to receive as argument object errorRes:HttpErrorresponse (import it from @ang/common/http)
+        //4.(295)add new variable here errorMessage and set initialy to some default error message
+    //2.(297)copy the code for error handling from the pipe and paste here in this private method
+        let errorMessage = 'An unknown error occured.'
+        //5.(295)check if we dont have error or error.error properties of errorRes object, then return throwError(errorMessage, the default initial messge)
+        if (!errorRes.error || !errorRes.error.error) {
+            return throwError(errorMessage); //throwError Observable with that error message value 
+        }
+        //1.(295) else if we have the message property of errorRes object, then switch to that property with switch
+        switch (errorRes.error.error.message) { //in switch statement we will have only one case "EMAIl_EXISTS": errorMessage = 'new error message'
+            //5.(295) here I will overwrite/reasign that variable to this error message
+            case 'EMAIL_EXISTS': errorMessage = 'This email already exists'; 
+            break;
+        //5.(297)lets write more cases here in switch (related to Common error codes from documentation)
+            case 'EMAIL_NOT_FOUND': errorMessage = 'This email does not exist';
+            break;
+            case 'INVALID_PASSWORD': errorMessage = 'The password is invalid or the user does not have a password';
+            break;
+            //2(295).its noot good practice in the component this error handling logic(because the component is care about updating the UI, and not the error handle logic).This handle logic we can move in the Service with rxjs/operators
+        }
+        //6.(295) out of the switch block, we can return throwError observabe with that new errorMessage value
+        return throwError(errorMessage); 
+        //3.(297)now with this method we have the central place for error handling logic, and now go to signUp() to pipe(catchError(paste here this.handleError private method))
+    }
 }

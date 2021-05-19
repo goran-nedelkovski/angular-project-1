@@ -72,10 +72,18 @@ export class AuthComponent implements OnInit {
     //     console.log(resData)
     //   //5.(294)here as soon as we are done with sending the form(t.e. when we get the response), set back isLoading to false (in both case, in the success case and in the error case)
     //     this.isLoading = false;
-    //   }, error => { //2nd argument in subscribe will be error callback (if we get an error obj)
-    //     console.log(error)
+    //   }, errorRes => { //2nd argument in subscribe will be error callback (if we get an error obj)
+    //     console.log(errorRes)
+    //////////////////295. Improving Error Handling
+    //1.(295)in console we can see in the response Error object ->error -> message: 'EMAIl_EXIST' => and that code is provide by Firebase (I can see that in the documentation of Firebase auth rest api in Common error codes:)
+    // //1.(295)letts check with switch the error.message property
+    //   switch (errorRes.error.error.message) {
+    //     case 'EMAIL_EXISTS': this.error = 'This email already exists';
+    //   //2(295).its noot good practice here in the component this error handling logic(because the component is care about updating the UI, and not the handle logic).This handle logic we can move in the Service with rxjs/operators
+    //   }
+      // );
+      // )
     //   //8.(294)also I want to show error message if we get an arror here t.e. if we have a problem with login.for that I will create error property to store the error:string messagge and initialy set to null and here we get the error.message and store to that error:string property (go to the template)
-    //     this.error = 'An error occur';
     //     //5.(294)here as soon as we are done with sending the form(t.e. when we get the response), set back isLoading to false (in both case, in the success case and in the error case)
     //     this.isLoading = false;
     // //6.(294)now isLoading property we can use in the template to hide the form
@@ -86,17 +94,19 @@ export class AuthComponent implements OnInit {
         resData => { //4.we know that we will get/receive that AuthResponseData interface object, that we can store in some variable resData and simply console thatg varibale
           console.log(resData);
           this.isLoading = false;
-        }, error => {
-          console.log(error);
-          this.error = 'An Error occus';
+        }, 
+    //7(295)here in the component we subscribe() to that throwError(errorMessage) Observable and we know that we get/receive that errorMessage value from the throwError Observable (that errorMessage value that is send/emit/return/throw by throwError observable), because here we subscribe() to that throwError(errorMessage) Observable
+        errorMessage => {
+          console.log(errorMessage);
+          this.error = errorMessage;
           this.isLoading = false;
         }
     );
 //5'(296)now if we login with the same email and password, in the console we succefuly get back the Response object (..plus with property registered: true;//which means the user is registered in the db with signUp/register logic)
   //5.(239)we can see in the console(if we signUp, switch to signUp) the new registered User object and we can se that registered User in firebase.com -> Authenticate -> Users (Refresh)).But if we input the exactly email and password (or at least the same email) we get an error because thatg User already exists
     form.reset();//after sending/sumbiting the form, reset the form with form.reset() like at the begining with empty fields.
+ 
   }
-
 /////////////////290. Preparing the Backend
 //1.(290)in our firebase.console project, go to Authentication page -> -> Get started -> set up Sing In method (in Users). before we do that, lets go to the Database(Realtime Database)-> Rules -> and for ".read" and '.write' set 'auth != null' t.e. this: ".read": "auth != null",".write": "auth != null" -> Publish//this will tell firebase, that only authenticate users can read and write our data ;//now if we fetch recipes, we see error in the console(401, nort authorize)
 //2.(290)go back to our firebase.console project, go to Authentication page to enable the authentication and to add some logic to be able to visit our authenticate routes again-> Get started -> set up Sing In method (in Users) ->choose Emial/password -> click Enable(only the 1st one at the top)->Save (now we have firebase biuld-In authentication active, where you can send request to sertain api-endpoint to create Users and logged the users in.//and you can see the Users in the Users tab (Authentication->Users))
