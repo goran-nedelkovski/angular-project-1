@@ -23,7 +23,8 @@ export interface AuthResponseData {
 export class AuthService {
 //4.(298)here in Auth Service I want to store the Authenticate User (Userf model class), store as a Subject observable(//the idea is to emit/send a new user with subject.next(new user) when we have one/login or also when we logout/when we clear the user/when the user is invalid/when token expired)
      user = new Subject<User>();//4'(298) Subject<is gerenic type, so the type of the data that this obs returns at the end is Userf model class> (import the Subject from 'rxjs' and import the User from user.model.ts)
-    //5.(292)we need http:HttpClient to send that requests.inject it in the constructor
+//3.(299)we manage our user here trough a Subject obs.this will inform all places in our app when our user changes(the user observable changes).Lets assume that user (user subjectg observable) always changes when the authentication status changes(true or false).So, even the token has expired, the user subject obs will emit a new value (which will be null, because the user will be invalid there).(we will add this logic);Lets assume that user subject obs is source of true (so in the header component we can subscribe to that userf subject obs to update correctly base on the user's status)(go to header.comp.ts)
+     //5.(292)we need http:HttpClient to send that requests.inject it in the constructor
     constructor(private http: HttpClient) { }
     //4.(292)add signUp()/register method.This method should send our request to that signUp url(to signUp endpoint)
     //4.(292) signUp(expect to receive as parameters/input values email:string, password:string) 

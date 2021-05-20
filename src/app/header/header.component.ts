@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 //import { Subscription } from 'rxjs';
 //import { Recipe } from '../recipes/recipes.model';
 import { DataStorageService } from '../shared/data-storage.service';
@@ -8,14 +10,28 @@ import { DataStorageService } from '../shared/data-storage.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
+  //6.(299)we can unsubscribe when we leave this component, so 1st add private property userSub:Sub, then store all the subscription code (in ngOnInit) in this.userSub property and in ngOnDestroy() add unsubscribe() to this property
+  private userSub:Subscription; 
+//7'(299)so add a property isAuthenticated and initialy set to false
+  isAuthenticated = false;
   //3.create own event featureSelected
   //with @Output decorator, this our own event will be listenable from outside(from our parent component, app comp)
   // @Output() featureSelected = new EventEmitter<string>()
-
-  constructor(private dataStorageService:DataStorageService) { }
+//4.(299)in header.comp.ts inject the Auth Service
+  constructor(private dataStorageService:DataStorageService,
+    private authService:AuthService) { }
 
   ngOnInit(): void {
+//5.(299)in the header component(in ngOnInit) we can subscribe to that user subject obs to update correctly base on the user's status(wheever the user is null or exist))
+    this.userSub = this.authService.user.subscribe(
+      user => { //we know that we will get/receive the user object
+      //7.(299)lets assume that this user wheter will be null if we are not logged in or will exists(user object) if we are logged in.So idea is, if we have the user, we are logged in
+        this.isAuthenticated = !user ? false : true; 
+      //7''(299)when we get the user(null or exist) isAuthentication = false if !user(if user === null) or otherwise isAuthenticate = true if user exists like normal js object 
+      //7'' we can also do like this: this.isAuthenticated = !!user; (true -> we can see that with console.log(!user) and console.log(!!user)) (go to header.comp.html)
+      }
+    );
     // this.recipesSub = this.dataStorageService.fetchRecipes().subscribe(
     //   (recipes:Recipe[]) => {
     //     console.log(recipes);
@@ -42,6 +58,9 @@ export class HeaderComponent implements OnInit {
   this.dataStorageService.fetchRecipes().subscribe();
   }
 
+  ngOnDestroy() {
+    this.userSub.unsubscribe();
+  }
   // ngOnDestroy() {
   //   this.recipesSub.unsubscribe();
   // }

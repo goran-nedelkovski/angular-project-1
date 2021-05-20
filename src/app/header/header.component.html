@@ -13,15 +13,24 @@
             <!-- <li><a href="#" (click)="onSelect('recipe')">Recipes</a></li> -->
         <!--1.(158.marking active routes)
             //we need to dinamicaly add the bootstrap class="active" in the both li items->with directive routerLinkActive="active"-->
-            <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a></li>
+        <!--8.(299)we can use that property isAthenticated here in the template to update it correctly.so here in recipes link we can add *ngIf="isAuthenticated" on li item(recipes link will be only visible if isAuthenticate is true)-->
+            <li routerLinkActive="active" *ngIf="isAuthenticated"><a routerLink="/recipes">Recipes</a></li>
                 <!--onSelected('recipe', $event) =>this method can received one more arg/parameter and that would be $event obj.$event always refer/point to the event's data that we pass in our method as input value (refer/point to 'recipe')-->
  <!--3.(287)here in the header template lets add a new link with routerLink to /auth page (so trough a link navigation we can go to the auth page)-->
-            <li routerLinkActive="active"><a routerLink="/auth">Authenticate</a></li>
+         <!--9.(299) Authentication link will only show if isAuthenticated is false t.e. if !isAuthenticate-->  
+            <li routerLinkActive="active" *ngIf="!isAuthenticated"><a routerLink="/auth">Authenticate</a></li>
                 <!-- <li><a href="#" (click)="onSelect('shopping-list')">Shopping List</a></li> -->
                 <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown" appDropdown>
+    <!--2.(299)we want to disabled the link Recipes if we are not logged In, then disabled the Authenticate link if we are loggedIn, then always show shopping-list, disabled the dropdown if we are not loggedin,and add logout button.
+    //lets start with logout button here in new li>a; Now we make sure that we get the current auth stautus in the header component t.e. must make sure that we get the current user with the valid token or not and use this information to update the template-->
+            <!--10.(299)logout will only be shown if isAuthenticate is true-->
+                <li *ngIf="isAuthenticated">
+                    <a style="cursor: pointer;">Logout</a>
+                </li>
+    <!--11(299)also dropdown will be visible if isAuthenticate is true(because if we are not authentiate/if w are not logged in we cant store and fetch data)-->
+                <li class="dropdown" appDropdown *ngIf="isAuthenticated">
                     <!--2.(159)-//Remove href(to avoid reload the page t.e. to avoid sending http requests to the browser that will slow out app) also on these links ad add attribute style="cursor:poniter" on the 2 links-->
                     <a style="cursor: pointer;" class="dropdown-toggle" role="button">Menage <span class="caret"></span></a>
                     <ul class="dropdown-menu">

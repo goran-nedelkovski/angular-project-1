@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { AuthResponseData } from './auth.service'; //import the interface AuthResponseData
@@ -20,7 +21,8 @@ export class AuthComponent implements OnInit {
 //3.(294)for that here in auth.comp.ts I will create a property isLoading and set to false initialy
   isLoading = false;
   error: string = null; //8.(294)also I want to show error message in alert box if we have an arror t.e. if we have a problem with login.for that I will create error property to store the error:string messagge and initialy set to null
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, 
+    private router:Router) { }
 
   ngOnInit(): void {
   }
@@ -94,6 +96,9 @@ export class AuthComponent implements OnInit {
         resData => { //4.we know that we will get/receive that AuthResponseData interface object, that we can store in some variable resData and simply console thatg varibale
           console.log(resData);
           this.isLoading = false;
+      //////////////299. Reflecting the Auth State in the UI
+//1.(299)lets forward user to a different route once the user is authenticate/logged In t.e. redirect the user once the user is authenticate/logged In(we can do in the handleAuthentication() or in the component in subscribe()).I will do that redirection/navigation in the component(in subscribe(only in the success case)), so I need to inject a router:Router
+          this.router.navigate(['/recipes']); //programmatic navigation/redirect to '/recipes' route/page (programmatic from our code because that we know when the login is done) (go to header.comp.html)
         }, 
     //7(295)here in the component we subscribe() to that throwError(errorMessage) Observable and we know that we get/receive that errorMessage value from the throwError Observable (that errorMessage value that is send/emit/return/throw by throwError observable), because here we subscribe() to that throwError(errorMessage) Observable
         errorMessage => {
