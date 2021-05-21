@@ -6,7 +6,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, tap } from "rxjs/operators";
-import { Subject, throwError } from 'rxjs';
+import { BehaviorSubject, Subject, throwError } from 'rxjs';
 import { User } from "./user.model";
 //9.(292)lets create a new interface AuthResponseData(no need to export) for the response data that we get back from the api t.e. <the Response data that we get back/retrieve with the post<AuthResponseData>()>(see the Response payload from the documentation)(good practice is to create an interface, which is very helpful when we work with the response data)
 export interface AuthResponseData {
@@ -22,7 +22,13 @@ export interface AuthResponseData {
 @Injectable({ providedIn: 'root' }) //if we inject service into a service like here, we need to add @Injectable()
 export class AuthService {
 //4.(298)here in Auth Service I want to store the Authenticate User (Userf model class), store as a Subject observable(//the idea is to emit/send a new user with subject.next(new user) when we have one/login or also when we logout/when we clear the user/when the user is invalid/when token expired)
-     user = new Subject<User>();//4'(298) Subject<is gerenic type, so the type of the data that this obs returns at the end is Userf model class> (import the Subject from 'rxjs' and import the User from user.model.ts)
+     //user = new Subject<User>();//4'(298) Subject<is gerenic type, so the type of the data that this obs returns at the end is Userf model class> (import the Subject from 'rxjs' and import the User from user.model.ts)
+//2.(300)now we need to get access to the User(currently loogedIn/auth user) in both (in storeResipes and in fetchRecipes), because we need to get the token from the User (t.e. when we store or fetch Recipes I want to get only the token of the currently loggedIn/authenticate User)(go to auth.service.ts)
+//2'(300)lets store the token in a variable and initialy set to null (because we are interested only for the token;//on demand User's data)
+  //  token:string = null;
+  //2''(300) instead of subject here we can use behaviuorSubject and its the same like the Subject.The difference is that with BehaviourSubject also gives us subscribers and immidiate access to the previous emitted value (that meeans that we have access to the current aciive User even we subscribe after that user has been emitted; t.e. we have access to the latest User).
+  //2''(300) user = new BehaviourSubjet<User>(initialy set to null starting value)(go to data-storage.service)
+  user = new BehaviorSubject<User>(null);
 //3.(299)we manage our user here trough a Subject obs.this will inform all places in our app when our user changes(the user observable changes).Lets assume that user (user subjectg observable) always changes when the authentication status changes(true or false).So, even the token has expired, the user subject obs will emit a new value (which will be null, because the user will be invalid there).(we will add this logic);Lets assume that user subject obs is source of true (so in the header component we can subscribe to that userf subject obs to update correctly base on the user's status)(go to header.comp.ts)
      //5.(292)we need http:HttpClient to send that requests.inject it in the constructor
     constructor(private http: HttpClient) { }
@@ -118,14 +124,15 @@ export class AuthService {
         const expirationDate = new Date(new Date().getTime() + expiresIn * 1000); //new js Date object, base on that ExpiresIn time that we get back from Firebase
         //6'(298) new Date(current Date with new Date().getTime()=current TimeStamps in miliseconds since the beginning of time + resData.expiredIn property that we get back from the Firebase(eith + we has converted to a number * 1000 to miliseconds))
     //5'(298) here in tap() I want to create my new User (user=new User(the arguments of the constructor requires, base on resData object interface that we get) obj/incatnce user of the User class)
-            const user = new User(
+            const user = new User( ////////=>this is our created currently loggedIn user in our app t.e. our currently authenticate user that we are creating here base on resData:AuthResponseData object (from resData I get/receive the userId, token...and with these informaitions I am creating here my currently authenticate/logged In user)
                 email, 
                 userId, 
                 token, 
                 expirationDate);
         //6''.(298)pass that expirationDate object in the User constructor as the last argument.So this will construct/biuld the user with the resDate that we get back
-        //7.(298) now we can use the Subject observable to send/emit/next that created user t.e. next our currently loggedIn user in our app
+        //7.(298) now we can use the Subject observable to send/emit/next that currently created authenticate user t.e. next our currently loggedIn user in our app
                 this.user.next(user); //this is our currently loggedIn user in our app
+    //////////here after I created my currenly auth/loggedIn user(base on the resData), I need to store this data(thisinformation) in the user Subject observable (instead of storing it in Local Storage, here I'm storing the auth/loggedIn user in the Subject observable.So call this obs and next(our currently created auth/loggedIn user)).With this, some components or services (that are interested/care about this auth/loggedIn user, or interested about the user.token), can subscibe to this user Subject observable to can take the user data (to take the currelty logedIn/auth user object with the token)
     }
 
 
@@ -158,4 +165,12 @@ export class AuthService {
         //3.(297)now with this method we have the central place for error handling logic, and now go to signUp() to pipe(catchError(paste here this.handleError private method))
     }
 }
-
+/////////////////300. Adding the Token to Outgoing Requests
+//1(300).why we cant fetch the data? because firebase don't know that we have a valid token. (we know from the responce object, but Firebase dont know)
+//1.(300)lets use our token (add it in our outgoing request) to can fetch the data.So, we need to add the token in our outgoing request to let/inform Firebase to know about that (to inform Firebase that we have a valid token).For that, we need to manipulate our outgoing http requests (for storing and fetching data)(so go to data-torage.service.ts)
+//1.In Data Storage service, those requests (get and post) now need to be added such as we do attach our token to them (the token we are storing in the User object in the auth.service)
+//const user = new User( ////////=>this is our created currently loggedIn user in our app t.e. our currently authenticate user that we are creating and storing here base on resData:AuthResponseData object (from resData I get/receive the userId, token...and with these informaitions I am creating here my currently authenticate/logged In user)
+// email, 
+// userId, 
+// token, 
+// expirationDate);

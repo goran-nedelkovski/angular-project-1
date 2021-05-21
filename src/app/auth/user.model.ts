@@ -1,5 +1,6 @@
 //////////////298. Creating & Storing the User Data
 //1.(298)lets create a User Model (in the auth folder -> create a new file user.model.ts).This User model will store the core data of the User
+////////the User model is creation of the developer and here will be stored the core data of the User (of the currenly loggedIn/authenticate User object) base on ResponseData: AuthResponseData interface object. (I'm creating this User Model base on that AuthResponseData t.e. I take some core properties-data from that AuthResponseData obj and with that informations I'm creating this User Model)
 export class User {
 //2.(298)lets add the constructor(and here I will use the shortcut assign the input parameters to properies in the same line with private/public accessor)
     constructor(
