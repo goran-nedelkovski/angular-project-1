@@ -47,18 +47,20 @@ export class DataStorageService {
     //3'(300)make sure we can get the User once (1st way is with unsubscribe() after the subscribe() afterf I am done) or 2ndway(better way) is with pipe(operator take(1))->which means that we get the User once t.e. only the latest User (t.e. take one/the latest value from that Observable and automaticaly unsubscribe())
     //4(300)we can pipe(Sum) user Observable + http.get Observable in a one big Observable which is actuely the operator exaustMap() (import it from 'rxjs/operator' and its 2nd argument in pipe to pipe the user obs).ExhaustMap() waits for the first obs(user obs) to complete and when we get the data from the user obs, then returns inside the inner observable(2nd obs t.e. return http.get() obs)
     //6.(300) 'return' this whole big Observable 
-    return this.authService.user.pipe(take(1), exhaustMap(//here we get the User object, but only once(only the latest User)
-        user => { //ExhaustMap() waits for the first obs(user obs) to complete and when we get the data from the user obs, then returns inside the inner observable(2nd obs t.e. return http.get() obs)
+    // return this.authService.user.pipe(take(1), exhaustMap(//here we get the User object, but only once(only the latest User)
+    //     user => { //ExhaustMap() waits for the first obs(user obs) to complete and when we get the data from the user obs, then returns inside the inner observable(2nd obs t.e. return http.get() obs)
     //8'.(300)when we get/receive the the user:User from the 1st obs(user subject obs obj,t.e. currently loggedIn/auth User), then on the http.get() request attach our user.token as query Parameter on 2 ways: 1st way is in the end of the url with ?auth='+user.token or 2nd way is after the url with {queryParams: new HttpQueryParams().set('auth', user.token)} (for some other APIs we can add the token in the {header obj} of the request)
         return this.http.get<Recipe[]>('https://ng-course-recipe-book-9f63a-default-rtdb.europe-west1.firebasedatabase.app/recipes.json', 
-        {
-        //8''(300) attach the token on 2nd way with {params: new HttpParams()object.set('token's name', token value)}
-            params: new HttpParams().set('auth', user.token)
-        })
+        // {
+        // //8''(300) attach the token on 2nd way with {params: new HttpParams()object.set('token's name', token value)}
+        //     params: new HttpParams().set('auth', user.token)
+        // })
       //7.attach our user.token on the http.get() request as query Parameter on 2 ways: 1st way is in the end of the url with ?auth='+user.token or 2nd way is after the url with {queryParams: new HttpQueryParams().set('auth', user.token)}
-        }), 
     //5.(300)cut map() and tap() operators and paste here in the main pipe() after the exhaustMap().
-        map(recipes => { //3.we expect to get the recipes (but the recipes that might not have an Ingredients property)
+        )
+//12.(301)we don't need any more that logic with pipe(take(1), exhaustMap(..)), that we moved into the Interceptor Service.But here, we should only add map() and tap() operators in pipe() and don't need here that object {params: ...}(go to auth-interceptor.service.ts)
+        .pipe(
+            map(recipes => { //3.we expect to get the recipes (but the recipes that might not have an Ingredients property)
         return recipes.map(recipe => { //3.here with map() method we will get each/every recipe item of that array
     //3.here we will return the tranformed recipe item/object with {...spread operator on the original recipe(with spread we can copy/unpacking the existing properties of the original recipe(without ingredients property), plus ingredients: recipe.ingredients with ternary operator //if its true ->recipe.ingrediens, else if its false ->[])}   
             return {...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []};//3.here we will return the tranformed recipe item/object with {...spread operator on the original recipe(with spread we can copy, unpacking the existing properties of the original recipe)}
