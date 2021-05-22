@@ -57,6 +57,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     //8.in subscribe() we dont need to pass a function if we are not interested/not care about the response (go to recipes-resolver.service)
   this.dataStorageService.fetchRecipes().subscribe();
   }
+  //4.(302)in the header ts implement this method onLogout() and in this method call logout() from Auth Service (go to auth.service.ts)
+  onLogout() {
+    this.authService.logout();
+  }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();

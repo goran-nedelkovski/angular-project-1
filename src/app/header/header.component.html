@@ -27,7 +27,8 @@
     //lets start with logout button here in new li>a; Now we make sure that we get the current auth stautus in the header component t.e. must make sure that we get the current user with the valid token or not and use this information to update the template-->
             <!--10.(299)logout will only be shown if isAuthenticate is true-->
                 <li *ngIf="isAuthenticated">
-                    <a style="cursor: pointer;">Logout</a>
+            <!--3.(302)add click listener on logout button in header.comp.html-->
+                    <a style="cursor: pointer;" (click)="onLogout()">Logout</a>
                 </li>
     <!--11(299)also dropdown will be visible if isAuthenticate is true(because if we are not authentiate/if w are not logged in we cant store and fetch data)-->
                 <li class="dropdown" appDropdown *ngIf="isAuthenticated">

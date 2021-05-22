@@ -8,6 +8,7 @@ import { Injectable } from "@angular/core";
 import { catchError, tap } from "rxjs/operators";
 import { BehaviorSubject, Subject, throwError } from 'rxjs';
 import { User } from "./user.model";
+import { Router } from "@angular/router";
 //9.(292)lets create a new interface AuthResponseData(no need to export) for the response data that we get back from the api t.e. <the Response data that we get back/retrieve with the post<AuthResponseData>()>(see the Response payload from the documentation)(good practice is to create an interface, which is very helpful when we work with the response data)
 export interface AuthResponseData {
     idToken: string,
@@ -31,7 +32,7 @@ export class AuthService {
   user = new BehaviorSubject<User>(null);
 //3.(299)we manage our user here trough a Subject obs.this will inform all places in our app when our user changes(the user observable changes).Lets assume that user (user subjectg observable) always changes when the authentication status changes(true or false).So, even the token has expired, the user subject obs will emit a new value (which will be null, because the user will be invalid there).(we will add this logic);Lets assume that user subject obs is source of true (so in the header component we can subscribe to that userf subject obs to update correctly base on the user's status)(go to header.comp.ts)
      //5.(292)we need http:HttpClient to send that requests.inject it in the constructor
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private router:Router) { }
     //4.(292)add signUp()/register method.This method should send our request to that signUp url(to signUp endpoint)
     //4.(292) signUp(expect to receive as parameters/input values email:string, password:string) 
     signUp(email: string, password: string) { //4.expect to receive as parameters/value email:string, password:string
@@ -117,6 +118,15 @@ export class AuthService {
                 }))
         //4'.(297)this handle Error function runs for both Observables related to signUp and the Observables for login
     }
+    /////////////////302. Adding Logout
+//1(302)lets add logout() methiod in the auth Service
+    logout() {
+    //2(302)call user Subject obs and next(null) to set out user to null. this will inform all app that the user is unAuth..(, because that the logic, user === null) (go to header.comp.html)
+        this.user.next(null);
+    //5.(302)here in the Auth Service I want to redirect/navigate away to the /auth route(page).(not in the component; so first inject the router:Router in the constructor)
+        this.router.navigate(['/auth']);
+    }
+
 //8.(298)as the error Handling before, we need the same logic for our loogedIn user, to handle.So I will add private method
     private handleAuthentication(email:string, userId:string, token:string, expiresIn:number) {//we expect to get these arguments
 //9(298)copy and paste here the code from tap().here remove the resData and replace the Users parameters with these paameters of the function 
