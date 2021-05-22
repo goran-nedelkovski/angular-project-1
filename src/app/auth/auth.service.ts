@@ -118,6 +118,35 @@ export class AuthService {
                 }))
         //4'.(297)this handle Error function runs for both Observables related to signUp and the Observables for login
     }
+//3.(303) after that, we can retreive/fetch/get this store data from the local Storage when we reloads/refresh/restart our app.for that, we can add a new method here 
+//3.(303)I will named this method autoLogin because automaticaly will set the user to logged In when the our app starts or when our app reloads/re-start (doing that by checking in the localStorage wheter there is the stored data there, wheter there is the existing user)
+    autoLogin() { 
+//3.(303)the goal here is to retreive/fetch the data from the local Storage 
+//3'.(303) we need to parse that retreive/fetched that JSON string into a js object to can work with that here and store it that obj snapshot in variabale const userData: specify the type of this obj{email:string, id:string, _tokem:string, _tokenExpirationDate:string //must be a string also, because in the obj Snapshot we can't store Date obj, but later we will convert it to a js obj....}
+        const userData: {
+            email:string;
+            id:string;
+            _token:string;
+            _tokenExpirationDate:string;//this will also be a string 
+        } = JSON.parse(localStorage.getItem('userData')); //this is sinhronious method
+   //4.(303)now I will check if userData exists
+        if(!userData) { //if the the userData don't exist (if userData===null)
+            return; //return nothing, and the user will need to login
+        } 
+        //else if we have the userData (if userData exists)
+        //5.(303)else->with that fetch information from localStorage, here we can create our new loadedUser with new User() in const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExpDate:string)//convert _tokenExpirationData:string into a Date object by passing as arguements in the Date() constructor like this: new Date(userData._tokenExpiratDate:string))
+        const loadedUser = new User(
+            userData.email,
+            userData.id,
+            userData._token, 
+            new Date(userData._tokenExpirationDate) //convert _tokenExpirationData:string into a Date object by passing as arguements in the Date() constructor like this: new Date(userData._tokenExpiratDate:string)
+        );
+    //6.(303)now we need to check if our loadedUser has a valid token (if loadedUser.token is true, t.e. the valid token is true if _tokenExpirateDate > the currentDate (so if stil have _tokenExpirationDate in the future),then return us the valid this._token)
+            if(loadedUser.token) { //token is now a getter because we are working with  the User model
+     //7.(303)if the token is valid, then emit/next our loadedUser with our user Subject obs as our currenly active user (emit/next our new authenticate user, because at this point of time, we know that we get our loaded/fetched user and the token is stil valid, so this is our loggedIn user )Lets see if its work in ngOnInit in app.component(go to app.comp.ts)
+                this.user.next(loadedUser);
+            }
+    }
     /////////////////302. Adding Logout
 //1(302)lets add logout() methiod in the auth Service
     logout() {
@@ -134,7 +163,7 @@ export class AuthService {
         const expirationDate = new Date(new Date().getTime() + expiresIn * 1000); //new js Date object, base on that ExpiresIn time that we get back from Firebase
         //6'(298) new Date(current Date with new Date().getTime()=current TimeStamps in miliseconds since the beginning of time + resData.expiredIn property that we get back from the Firebase(eith + we has converted to a number * 1000 to miliseconds))
     //5'(298) here in tap() I want to create my new User (user=new User(the arguments of the constructor requires, base on resData object interface that we get) obj/incatnce user of the User class)
-            const user = new User( ////////=>this is our created currently loggedIn user in our app t.e. our currently authenticate user that we are creating here base on resData:AuthResponseData object (from resData I get/receive the userId, token...and with these informaitions I am creating here my currently authenticate/logged In user)
+            const user = new User( ////////=>here I'm creating our currently loggedIn user in our app t.e. our currently authenticate user that we are creating here base on resData:AuthResponseData object (from resData I get/receive the userId, token...and with these informaitions I am creating here my currently authenticate/logged In user)
                 email, 
                 userId, 
                 token, 
@@ -142,9 +171,14 @@ export class AuthService {
         //6''.(298)pass that expirationDate object in the User constructor as the last argument.So this will construct/biuld the user with the resDate that we get back
         //7.(298) now we can use the Subject observable to send/emit/next that currently created authenticate user t.e. next our currently loggedIn user in our app
                 this.user.next(user); //this is our currently loggedIn user in our app
-    //////////here after I created my currenly auth/loggedIn user(base on the resData), I need to store this data(thisinformation) in the user Subject observable (instead of storing it in Local Storage, here I'm storing the auth/loggedIn user in the Subject observable.So call this obs and next(our currently created auth/loggedIn user)).With this, some components or services (that are interested/care about this auth/loggedIn user, or interested about the user.token), can subscibe to this user Subject observable to can take the user data (to take the currelty logedIn/auth user object with the token)
+    //////////here after I created my currenly auth/loggedIn user(base on the resData), I need to store this data(this information) in the user Subject observable (instead of storing it in Local Storage, here first I'm storing the auth/loggedIn user in the Subject observable.So call this obs and next(our currently created auth/loggedIn user)).With this, some components or services (that are interested/care about this auth/loggedIn user, or interested about the user.token), can subscibe to this user Subject observable to can take the user data (to take the currelty logedIn/auth user object with the token)
+    ////////////////303. Adding Auto-Login
+    //1.(303)we want to keep our user loggedIn (to keep our token live) when we try to re-load/refresh our app. because for now, when we reload, the app is restart and all auth user data is lost.So, to keep the loggedIn user live when we reload, we need to store the user.token in Local Storage
+    //1.(303)after storing our currently created loggedIn/auth user in the user subject obs, also I want to store the user.token in the Local Storage (Local Storage is APi exposed/provide by the Browser and allowed us to store some key-value pairs and fetch it from there).local Storage is like an library/dictionary with key-value pairs (t.e. Api provided from the browser)
+    //2.(303)we need to convert from js object into a JSON string with JSON.stringify(user) //all data value will be stored in a string(text)//we can see in DevTools ->Aplication ->localStorage    
+        localStorage.setItem('userData', JSON.stringify(user)); //.set(set/write item and store the item with key/property name, item's value)
+    //3.(303) after that, we can retreive/fetch/get this store data from the local Storage when we reloads/refresh/restart our app.for that, we can add a new method here 
     }
-
 
     //////////////297. Login Error Handling
     //1.(297)it would be nice to share that error handling logic between both Observables(in login and signUp/register) in some private method in the Service

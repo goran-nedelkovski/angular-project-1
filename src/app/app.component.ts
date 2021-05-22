@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',   //it has to be unique selector//this is like our own secector tag in index.html (to render the component here in this selector tab)
@@ -10,13 +11,20 @@ import { Component } from '@angular/core';
   //   }
   // `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   // name = 'Goki'; //Data binding (communication between .ts code(our business logic) and .html template)
-  loadedFeature = 'recipe';  //6.we need a global var, where we can store the feature.it can be 'recipe' initialy
+  //loadedFeature = 'recipe';  //6.we need a global var, where we can store the feature.it can be 'recipe' initialy
   //6.here in onNavigate(), I will received as parameter, where we should navigate that informations/data from the event
   // onNavigate(feature:string) { //we expect to receaive some feature:string as data emitting from the event
   //   this.loadedFeature = feature;
   // }
+  constructor(private authService: AuthService) {}
+//8(303)lets see does does autoLogin() works in ngOnInit hook(it loads first, loads early t.e. runs as soon as the app starts) in app.comp.ts (because that is the component that will first loads when our app start, t.e. runs as soon as the app starts).
+//8.(303)so, implements OnInit interface and in ngOnInit() call autoLogin() from the Auth Service.So inject authService:Auth Service here in constructor()
+    ngOnInit() {
+      this.authService.autoLogin();
+    }
+
 }
 //add Bootstrap (so we don't manualy write css styles)
 //1st-> npm install --save bootstrap@3
