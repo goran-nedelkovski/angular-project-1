@@ -22,6 +22,8 @@ export interface AuthResponseData {
 //3.(292)export this class Auth Service and add @Injectable({providedIn:'roto'}0import it from @ang/core)
 @Injectable({ providedIn: 'root' }) //if we inject service into a service like here, we need to add @Injectable()
 export class AuthService {
+//3'.(304)1st we can store in a private property tokenExpirationTimer 
+ private tokenExpirationTimer:any;
 //4.(298)here in Auth Service I want to store the Authenticate User (Userf model class), store as a Subject observable(//the idea is to emit/send a new user with subject.next(new user) when we have one/login or also when we logout/when we clear the user/when the user is invalid/when token expired)
      //user = new Subject<User>();//4'(298) Subject<is gerenic type, so the type of the data that this obs returns at the end is Userf model class> (import the Subject from 'rxjs' and import the User from user.model.ts)
 //2.(300)now we need to get access to the User(currently loogedIn/auth user) in both (in storeResipes and in fetchRecipes), because we need to get the token from the User (t.e. when we store or fetch Recipes I want to get only the token of the currently loggedIn/authenticate User)(go to auth.service.ts)
@@ -145,6 +147,10 @@ export class AuthService {
             if(loadedUser.token) { //token is now a getter because we are working with  the User model
      //7.(303)if the token is valid, then emit/next our loadedUser with our user Subject obs as our currenly active user (emit/next our new authenticate user, because at this point of time, we know that we get our loaded/fetched user and the token is stil valid, so this is our loggedIn user )Lets see if its work in ngOnInit in app.component(go to app.comp.ts)
                 this.user.next(loadedUser);
+        //6''.(304)now we need to make sure that we call autoLogout() to ensure when the Timer starts.Where we call autoLogout()?-everywhere when we emit the user with user subject Observable , t.e. in hadleAuth() and in autoLogin()
+        //6''.here we need to calculate the expiration Time = future Date in miliseconds(with getTime()) - current Date in miliseconds()
+            const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime()
+            this.autoLogout(expirationDuration);
             }
     }
     /////////////////302. Adding Logout
@@ -154,6 +160,30 @@ export class AuthService {
         this.user.next(null);
     //5.(302)here in the Auth Service I want to redirect/navigate away to the /auth route(page).(not in the component; so first inject the router:Router in the constructor)
         this.router.navigate(['/auth']);
+    ///////////////304. Adding Auto-Logout
+    //1.(304)since we store a snapshot afterf log in, we must clear that snapshot in logout() (because when we logout, we need to clear that stored user in our app, and that includes the local Storage//we have a bug because our token should expires for 1h, and we should do here to clear that token from the localStorage)
+        // localStorage.clear(); //call localStorage.clear() to clear all the data in the localStorage
+    //1.(304)call localStorage.removeItem('userData') with that 'userData' key
+        localStorage.removeItem('userData'); 
+    //2.nnext step is to set a Timer when we stored that token first time, to we can later invalided that token at later point of time
+        //4.(304)here in logout() we want to clear that Timer.1st we check if we have an active Timer and if its true, then clearTimeout(this.tokenExpirationTimer as arguments)
+        if(this.tokenExpirationTimer) {
+            clearTimeout(this.tokenExpirationTimer);
+        }
+    //5.(304) after that, we can set this.tokenExpirationTimer back to null manualy
+        this.tokenExpirationTimer = null;
+    //6.(304)now we need to make sure that we call autoLogout() to ensure when teh Timer starts.Where we call autoLogout()?-everywhere when we emit the user with user subject Observable , t.e. in hadleAuth() and in autoLogin()
+    }
+//2.(304)nnext step is to set a Timer when we stored that token first time, to we can later invalided that token at later point of time(Timer for automaticaly logOut the user).for this, I will create autoLogout(expirationDuration:number) in the Auth Service
+    autoLogout(expirationDuration:number) { //as arguments expirationDuration:number (amount of miliseconds until the token is invalid)
+        expirationDuration = 3600000; //1 h in miliseconds
+        console.log(expirationDuration);
+        //2'(304)in autioLogout() we can add setTimer(() => {this.logout()} ,after this parameter expirationDulation in milisec call that callBack (1st arg)) 
+      //3''(304)store the Timer in this property  
+        this.tokenExpirationTimer = setTimeout(() => {
+            this.logout();
+        }, expirationDuration);
+    //3.(304)next is to clear the Timer, because when we try to logout manualy, we call the logout() and we stil have the Timer in the background with logout() again (asynschroniuos), and we dont want to do that.We want to clear the Timer there when we logout.its simple, 1st we add a private property tokenExpirationTimer and store the Timer in this property here 
     }
 
 //8.(298)as the error Handling before, we need the same logic for our loogedIn user, to handle.So I will add private method
@@ -172,6 +202,8 @@ export class AuthService {
         //7.(298) now we can use the Subject observable to send/emit/next that currently created authenticate user t.e. next our currently loggedIn user in our app
                 this.user.next(user); //this is our currently loggedIn user in our app
     //////////here after I created my currenly auth/loggedIn user(base on the resData), I need to store this data(this information) in the user Subject observable (instead of storing it in Local Storage, here first I'm storing the auth/loggedIn user in the Subject observable.So call this obs and next(our currently created auth/loggedIn user)).With this, some components or services (that are interested/care about this auth/loggedIn user, or interested about the user.token), can subscibe to this user Subject observable to can take the user data (to take the currelty logedIn/auth user object with the token)
+    //6'.(304)now we need to make sure that we call autoLogout() to ensure when teh Timer starts.Where we call autoLogout()?-everywhere when we emit the user with user subject Observable , t.e. in hadleAuth() and in autoLogin()
+                this.autoLogout(expiresIn + 1000); //6.after emit the user, call autoLogout(pass expiresIn * 1000 because we expect miliseconds)
     ////////////////303. Adding Auto-Login
     //1.(303)we want to keep our user loggedIn (to keep our token live) when we try to re-load/refresh our app. because for now, when we reload, the app is restart and all auth user data is lost.So, to keep the loggedIn user live when we reload, we need to store the user.token in Local Storage
     //1.(303)after storing our currently created loggedIn/auth user in the user subject obs, also I want to store the user.token in the Local Storage (Local Storage is APi exposed/provide by the Browser and allowed us to store some key-value pairs and fetch it from there).local Storage is like an library/dictionary with key-value pairs (t.e. Api provided from the browser)
