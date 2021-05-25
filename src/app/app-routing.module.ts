@@ -12,6 +12,7 @@ import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-ed
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { RecipesResolverService } from './recipes/recipes-resolver.service';
 import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth/auth.guard';
 //4.here at the top(under the imports) we add/create our routes (1st the main routs adn then 2nd the children routes)
     const appRoutes:Routes = [
         {
@@ -24,7 +25,10 @@ import { AuthComponent } from './auth/auth.component';
             path: 'recipes', //so I can visit this path-routh in the URL with localhost:4200/recipes
     //161./////////////// Adding Child Routing Together 
     //1.(161)//in app-routnig.module.ts add children: [] in the recipes(parent) path
-            component: RecipesComponent, children: [
+            component: RecipesComponent, 
+    //6.(305)in app-routing.module we can use our AuthGuard service in /recipe route(path, because this route/path I wanna protect) bu adding canActivate: [our service class AuthGuard in this array//must import at the top and import it in the app.module]
+            canActivate: [AuthGuard],
+            children: [
                 {
             //1.(161)here I want to load the text from ng-template(Please select a Recipe) in this empty path:''(/recipes)and we need a new component for that.//So I will create a new comp with:ng g c recipes/recipes-start;then render this child component in the recipes(parent) with <router-outlet> specieal directive
                     path: '',
