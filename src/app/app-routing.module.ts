@@ -2,17 +2,17 @@
 //1.create new file app-routin.module.ts for our routes
 import { NgModule } from '@angular/core'; //4.import NgMOdule from angular/core
 import { RouterModule, Routes } from '@angular/router';
-import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
-import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
-import { RecipesItemComponent } from './recipes/recipes-list/recipes-item/recipes-item.component';
-import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
-import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.component';
-import { RecipesComponent } from './recipes/recipes.component';
+// import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
+// import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
+// import { RecipesItemComponent } from './recipes/recipes-list/recipes-item/recipes-item.component';
+// import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
+// import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.component';
+// import { RecipesComponent } from './recipes/recipes.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
-import { RecipesResolverService } from './recipes/recipes-resolver.service';
+//import { RecipesResolverService } from './recipes/recipes-resolver.service';
 import { AuthComponent } from './auth/auth.component';
-import { AuthGuard } from './auth/auth.guard';
+//import { AuthGuard } from './auth/auth.guard';
 //4.here at the top(under the imports) we add/create our routes (1st the main routs adn then 2nd the children routes)
     const appRoutes:Routes = [
         {
@@ -21,52 +21,52 @@ import { AuthGuard } from './auth/auth.guard';
             redirectTo: '/recipes', 
             pathMatch: 'full' //redirect to /recipes if full path is empty (if the main is main domain localhost:4200)
         },
-        {
-            path: 'recipes', //so I can visit this path-routh in the URL with localhost:4200/recipes
-    //161./////////////// Adding Child Routing Together 
-    //1.(161)//in app-routnig.module.ts add children: [] in the recipes(parent) path
-            component: RecipesComponent, 
-    //6.(305)in app-routing.module we can use our AuthGuard service in /recipe route(path, because this route/path I wanna protect) bu adding canActivate: [our service class AuthGuard in this array//must import at the top and import it in the app.module]
-            canActivate: [AuthGuard],
-            children: [
-                {
-            //1.(161)here I want to load the text from ng-template(Please select a Recipe) in this empty path:''(/recipes)and we need a new component for that.//So I will create a new comp with:ng g c recipes/recipes-start;then render this child component in the recipes(parent) with <router-outlet> specieal directive
-                    path: '',
-                    component: RecipesStartComponent
-                },
-            //3.(164)I will cut this code and place it here before ':id' routes-paths (thats is the order: 1st are the path and 2nd are parameters)
-                {
-                    path: 'new', 
-                    component: RecipeEditComponent
-                },
-            //3.(161)add new path-route with path:':id' (:id is dinamic parameter/segment, added relative after '/recipes' t.e. in url will look like:'/recipes/1 or /recipes/2').in this path I want to load/render RecipesDetail comp.this child component will be also render in the recipes .html(parent) with <router-outlet> 
-                {
-                    path: ':id',
-                    component: RecipesDetailComponent,
-            //10.(284)apply here the resolve:[our Resolver Service] in these two paths(in path: ':id' and in path: ':id/edit') in app-routing.module.ts.And now, angular will run/execute this resolver before loading this routes
-                    resolve: [RecipesResolverService]
-                },
-        //1.(164)to can add new Recipe and to add existing recipes, we need to create a new component(ng g c recipes/recipe-edit)
-        //I will register the new route-path(relative child path in /recipes parent) here in app-rounting.module.ts(in ../recipes/new I want to load RecipeEdit comp)
-                //3(164)angular will parse 'new' as 'id' parameter(after ':id' route), so that will ocuur errors.So, I will cut this code and place it here before ':id' routes-paths (thats is the order: 1st are the paths(apsolute  relative) and 2nd are dinamic parameters(dinamic parameters are on the end))
-        //2.(164)I will duplicate this with :ide/edit(:id-we need the id parameter to can loaded) and /edit-because we are in the edit mode
-        //its the same component, and we will determine wheter we are on edit or not
-                {
-                    path: ':id/edit', 
-                    component: RecipeEditComponent,
-                    resolve: [RecipesResolverService]
-                },
-                {
-                    path: 'recipes-list',
-                    component: RecipesListComponent, children: [
-                        {
-                            path: 'recipes-item',
-                            component: RecipesItemComponent
-                        }
-                    ]
-                }
-            ]
-        },
+    //     {
+    //         path: 'recipes', //so I can visit this path-routh in the URL with localhost:4200/recipes
+    // //161./////////////// Adding Child Routing Together 
+    // //1.(161)//in app-routnig.module.ts add children: [] in the recipes(parent) path
+    //         component: RecipesComponent, 
+    // //6.(305)in app-routing.module we can use our AuthGuard service in /recipe route(path, because this route/path I wanna protect) bu adding canActivate: [our service class AuthGuard in this array//must import at the top and import it in the app.module]
+    //         canActivate: [AuthGuard],
+    //         children: [
+    //             {
+    //         //1.(161)here I want to load the text from ng-template(Please select a Recipe) in this empty path:''(/recipes)and we need a new component for that.//So I will create a new comp with:ng g c recipes/recipes-start;then render this child component in the recipes(parent) with <router-outlet> specieal directive
+    //                 path: '',
+    //                 component: RecipesStartComponent
+    //             },
+    //         //3.(164)I will cut this code and place it here before ':id' routes-paths (thats is the order: 1st are the path and 2nd are parameters)
+    //             {
+    //                 path: 'new', 
+    //                 component: RecipeEditComponent
+    //             },
+    //         //3.(161)add new path-route with path:':id' (:id is dinamic parameter/segment, added relative after '/recipes' t.e. in url will look like:'/recipes/1 or /recipes/2').in this path I want to load/render RecipesDetail comp.this child component will be also render in the recipes .html(parent) with <router-outlet> 
+    //             {
+    //                 path: ':id',
+    //                 component: RecipesDetailComponent,
+    //         //10.(284)apply here the resolve:[our Resolver Service] in these two paths(in path: ':id' and in path: ':id/edit') in app-routing.module.ts.And now, angular will run/execute this resolver before loading this routes
+    //                 resolve: [RecipesResolverService]
+    //             },
+    //     //1.(164)to can add new Recipe and to add existing recipes, we need to create a new component(ng g c recipes/recipe-edit)
+    //     //I will register the new route-path(relative child path in /recipes parent) here in app-rounting.module.ts(in ../recipes/new I want to load RecipeEdit comp)
+    //             //3(164)angular will parse 'new' as 'id' parameter(after ':id' route), so that will ocuur errors.So, I will cut this code and place it here before ':id' routes-paths (thats is the order: 1st are the paths(apsolute  relative) and 2nd are dinamic parameters(dinamic parameters are on the end))
+    //     //2.(164)I will duplicate this with :ide/edit(:id-we need the id parameter to can loaded) and /edit-because we are in the edit mode
+    //     //its the same component, and we will determine wheter we are on edit or not
+    //             {
+    //                 path: ':id/edit', 
+    //                 component: RecipeEditComponent,
+    //                 resolve: [RecipesResolverService]
+    //             },
+    //             {
+    //                 path: 'recipes-list',
+    //                 component: RecipesListComponent, children: [
+    //                     {
+    //                         path: 'recipes-item',
+    //                         component: RecipesItemComponent
+    //                     }
+    //                 ]
+    //             }
+    //         ]
+    //     },
         {
             path: 'shopping-list',
             component: ShoppingListComponent, children: [

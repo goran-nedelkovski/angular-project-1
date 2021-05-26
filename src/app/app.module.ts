@@ -6,21 +6,22 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { RecipesComponent } from './recipes/recipes.component';
-import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
-import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
-import { RecipesItemComponent } from './recipes/recipes-list/recipes-item/recipes-item.component';
+// import { RecipesComponent } from './recipes/recipes.component';
+// import { RecipesListComponent } from './recipes/recipes-list/recipes-list.component';
+// import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
+// import { RecipesItemComponent } from './recipes/recipes-list/recipes-item/recipes-item.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { DropdownDirective } from './shared/dropdown.directive';
 import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { AppRoutingModule } from './app-routing.module';
-import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.component';
-import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
+// import { RecipesStartComponent } from './recipes/recipes-start/recipes-start.component';
+// import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipesService } from './recipes/recipes.service';
 import { AuthComponent } from './auth/auth.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { RecipesModule } from './recipes/recipes.module';
 //import { ServerComponent } from './server/server.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //import { ServersComponent } from './servers/servers.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //angular is split (contain) of many modules/packages(re-usable piece of code in a separate file), and if we want to use some features of that modules/packages, simpli do here with import {} in app.modules.ts 
@@ -28,15 +29,15 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
   declarations: [
     AppComponent,
     HeaderComponent,
-    RecipesComponent,
-    RecipesListComponent,
-    RecipesDetailComponent,
-    RecipesItemComponent,
+    // RecipesComponent,
+    // RecipesListComponent,
+    // RecipesDetailComponent,
+    // RecipesItemComponent,
     ShoppingListComponent,
     ShoppingEditComponent,
     DropdownDirective,
-    RecipesStartComponent,
-    RecipeEditComponent,
+    // RecipesStartComponent,
+    // RecipeEditComponent,
     AuthComponent,
     LoadingSpinnerComponent
     //ServerComponent,
@@ -48,7 +49,9 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     FormsModule,  //we need Forms module for building forms, [(ngModel)]...
     ReactiveFormsModule, //1.(228)first import ReactiveFormsModule from @ang/forms and import it in this imports:[] in app.module.ts
     AppRoutingModule, //import AppRoutingModule here in imports:[] and in the top
-    HttpClientModule //3.(280)to can be used http:HttpClient, first we must import HttpClientModule here in imports:[] and import at the top from '@angular/common/http'
+    HttpClientModule, //3.(280)to can be used http:HttpClient, first we must import HttpClientModule here in imports:[] and import at the top from '@angular/common/http'
+  //4.(321)here import our RecipesModule to can use all recipes components that are exported there trough this RecipesModule
+    RecipesModule
   ],
   ///////////////237. Providing the Recipe Service Correctly
   //1.(237)instead here in recipes component, we must provide Recipe Service in app.module.ts (because here all child recipes components share this service instance, but when we navigate away to the shop-list, this recipes comp is destroyed)
