@@ -21,7 +21,7 @@ import { RecipesService } from './recipes/recipes.service';
 import { AuthComponent } from './auth/auth.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
-import { RecipesModule } from './recipes/recipes.module';
+//import { RecipesModule } from './recipes/recipes.module';
 //import { ServerComponent } from './server/server.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //import { ServersComponent } from './servers/servers.component';  //we must import here also, so to TyeScriot to know (without .ts extension, because .ts extension is added by webpack when bundle this automaticaly)
 //angular is split (contain) of many modules/packages(re-usable piece of code in a separate file), and if we want to use some features of that modules/packages, simpli do here with import {} in app.modules.ts 
@@ -51,7 +51,8 @@ import { RecipesModule } from './recipes/recipes.module';
     AppRoutingModule, //import AppRoutingModule here in imports:[] and in the top
     HttpClientModule, //3.(280)to can be used http:HttpClient, first we must import HttpClientModule here in imports:[] and import at the top from '@angular/common/http'
   //4.(321)here import our RecipesModule to can use all recipes components that are exported there trough this RecipesModule
-    RecipesModule
+    //RecipesModule 
+//4.(330)in app.module we dont have to import RecipesModule any more, because we lazyly load RecipesModule in app-routing.module with lazy loading
   ],
   ///////////////237. Providing the Recipe Service Correctly
   //1.(237)instead here in recipes component, we must provide Recipe Service in app.module.ts (because here all child recipes components share this service instance, but when we navigate away to the shop-list, this recipes comp is destroyed)

@@ -1,7 +1,7 @@
 //////////////////Setting Up Routes
 //1.create new file app-routin.module.ts for our routes
 import { NgModule } from '@angular/core'; //4.import NgMOdule from angular/core
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 // import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 // import { RecipesDetailComponent } from './recipes/recipes-detail/recipes-detail.component';
 // import { RecipesItemComponent } from './recipes/recipes-list/recipes-item/recipes-item.component';
@@ -12,6 +12,7 @@ import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-ed
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 //import { RecipesResolverService } from './recipes/recipes-resolver.service';
 import { AuthComponent } from './auth/auth.component';
+import { RecipesComponent } from './recipes/recipes.component';
 //import { AuthGuard } from './auth/auth.guard';
 //4.here at the top(under the imports) we add/create our routes (1st the main routs adn then 2nd the children routes)
     const appRoutes:Routes = [
@@ -21,6 +22,18 @@ import { AuthComponent } from './auth/auth.component';
             redirectTo: '/recipes', 
             pathMatch: 'full' //redirect to /recipes if full path is empty (if the main is main domain localhost:4200)
         },
+//2.(330)here in app-routing.module I will add new reoute-path path: 'recipes'
+        {
+            path: 'recipes',
+    //3.(330)loadChildren=>load only this child(only this feature Module area)when the user visit this path: /recipes;So, (1st way) loadChuldren: './relative path to that feature RecipesModule that we want to load when we visit /recipes, relatively from this current app-routing.module'; and after the path we must add with # the name of that feature Module class we want to load (RecipesModule)
+            //loadChildren: './recipes/recipes.module#RecipesModule' //load only this child feature Module are(t.e. loadChildren points on: 'relative path to that child feature Module file and with # point to class name of that feature Module')when the user visit this path: /recipes
+    ////3'(330).this will be put in a separate code bundle which is then downloaded on demand as soon as the user visit /recipes, but not sooner
+    //3''(330)(2nd way,modern)the alternative(modern)sintax of lazy loading is dinamicaly/asynhronious loading the feature Module with a Promise like this:
+    // loadChildren: anonimus function () => in the function's body we have dinamicaly load that relative path with a Resolve Promise function import('./relative path...which is the resolve success value').then(m//when we get that success/fulfilled value m object of the resolve Promise => m.RecipesModule//extract RecipesModule class of that m object (m object is the success value of the promise t.e. all recipes.module.ts file which contains RecipesModule class))
+            loadChildren: () => import('./recipes/recipes.module').then(m => m.RecipesModule)
+    ///after adding lazy loading, wits good to re-set/restart our app to see the efect ('clear' the biuld process and then restart 'ng serve' again) (go to app.module)
+    ///////best practice to use lazy loading is on some pages that we visit very rearly (we can save so much of initial bundle).Its no sense to use lazy loading on auth page, because that page is always seen (shown) by the user.
+    },
     //     {
     //         path: 'recipes', //so I can visit this path-routh in the URL with localhost:4200/recipes
     // //161./////////////// Adding Child Routing Together 
@@ -87,7 +100,9 @@ import { AuthComponent } from './auth/auth.component';
         // }
     ]
 @NgModule({
-    imports: [RouterModule.forRoot(appRoutes)], //5.in imports:[] import RouterModule.forRoot(routes)//RouterModule for routing functionality and forRoot() is a special function that register our routes for our application
+//////////////////332. Preloading Lazy-Loaded Code
+//1.(332)in app-routing.module in .forRoot(appRoutes, as second argument we can add preloadingStrategy:PreloadAllModules to avoid some delay with lazy loading)
+    imports: [RouterModule.forRoot(appRoutes, {preloadingStrategy: PreloadAllModules})], //5.in imports:[] import RouterModule.forRoot(routes)//RouterModule for routing functionality and forRoot() is a special function that register our routes for our application
     exports: [RouterModule] //6.export that configured RoterModule(configured with our routes), export it back to the main module (to app.module.ts)
 }) //3.because this is Module class, we need NgModule() decorator that receive js object with imports:[] and exports:[RouterModule] (export this configured module back to the main module (to app.module.ts))
 //2.create export class AppRoutingModule

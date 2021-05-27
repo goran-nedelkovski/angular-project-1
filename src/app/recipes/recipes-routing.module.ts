@@ -14,7 +14,10 @@ import { RecipesComponent } from "./recipes.component";
 ////4.(323)import all loaded components short-end with the lamp t.e. click on the comp -> the lamp is on the left -> click and choose: import all missing imports
 const routes:Routes = [
     {
-        path: 'recipes', //so I can visit this path-routh in the URL with localhost:4200/recipes
+/////////////////330. Implementing Lazy Loading
+//1.(330)lets start with recipes-routing.module.ts.lazy loading we can use in this feature module because we can own registered routes in this module.
+//1.(330)lets add path: '' (empty, because we are already in /recipes page/Module here).now we need to change the route-path in app-roouting.module (go to app-routing.module)
+        path: '', //so I can visit this path-routh in the URL with localhost:4200/recipes
 //161./////////////// Adding Child Routing Together 
 //1.(161)//in app-routnig.module.ts add children: [] in the recipes(parent) path
         component: RecipesComponent, 
