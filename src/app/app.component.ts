@@ -12,6 +12,7 @@ import { AuthService } from './auth/auth.service';
   // `]
 })
 export class AppComponent implements OnInit {
+  title = 'my-first-app';
   // name = 'Goki'; //Data binding (communication between .ts code(our business logic) and .html template)
   //loadedFeature = 'recipe';  //6.we need a global var, where we can store the feature.it can be 'recipe' initialy
   //6.here in onNavigate(), I will received as parameter, where we should navigate that informations/data from the event
