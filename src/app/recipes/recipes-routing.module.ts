@@ -10,7 +10,7 @@ import { RecipesListComponent } from "./recipes-list/recipes-list.component";
 import { RecipesResolverService } from "./recipes-resolver.service";
 import { RecipesStartComponent } from "./recipes-start/recipes-start.component";
 import { RecipesComponent } from "./recipes.component";
-//4.(323)add const routes:Routes array with all recipes related routes.So cut the recipes path/route with all nested recipes child routes and paste here
+//4.(323)add const routes:Routes array with all recipes related routes.So cut the recipes path/routes with all nested recipes child routes and paste here
 ////4.(323)import all loaded components short-end with the lamp t.e. click on the comp -> the lamp is on the left -> click and choose: import all missing imports
 const routes:Routes = [
     {
@@ -18,9 +18,9 @@ const routes:Routes = [
 //1.(330)lets start with recipes-routing.module.ts.lazy loading we can use in this feature module because we can own registered routes in this module.
 //1.(330)lets add path: '' (empty, because we are already in /recipes page/Module here).now we need to change the route-path in app-roouting.module (go to app-routing.module)
         path: '', //so I can visit this path-routh in the URL with localhost:4200/recipes
-//161./////////////// Adding Child Routing Together 
+//161./////////////// Adding Child Routing Together
 //1.(161)//in app-routnig.module.ts add children: [] in the recipes(parent) path
-        component: RecipesComponent, 
+        component: RecipesComponent,
 //6.(305)in app-routing.module we can use our AuthGuard service in /recipe route(path, because this route/path I wanna protect) bu adding canActivate: [our service class AuthGuard in this array//must import at the top and import it in the app.module]
         canActivate: [AuthGuard],
         children: [
@@ -31,10 +31,10 @@ const routes:Routes = [
             },
         //3.(164)I will cut this code and place it here before ':id' routes-paths (thats is the order: 1st are the path and 2nd are parameters)
             {
-                path: 'new', 
+                path: 'new',
                 component: RecipeEditComponent
             },
-        //3.(161)add new path-route with path:':id' (:id is dinamic parameter/segment, added relative after '/recipes' t.e. in url will look like:'/recipes/1 or /recipes/2').in this path I want to load/render RecipesDetail comp.this child component will be also render in the recipes .html(parent) with <router-outlet> 
+        //3.(161)add new path-route with path:':id' (:id is dinamic parameter/segment, added relative after '/recipes' t.e. in url will look like:'/recipes/1 or /recipes/2').in this path I want to load/render RecipesDetail comp.this child component will be also render in the recipes .html(parent) with <router-outlet>
             {
                 path: ':id',
                 component: RecipesDetailComponent,
@@ -47,7 +47,7 @@ const routes:Routes = [
     //2.(164)I will duplicate this with :ide/edit(:id-we need the id parameter to can loaded) and /edit-because we are in the edit mode
     //its the same component, and we will determine wheter we are on edit or not
             {
-                path: ':id/edit', 
+                path: ':id/edit',
                 component: RecipeEditComponent,
                 resolve: [RecipesResolverService]
             },

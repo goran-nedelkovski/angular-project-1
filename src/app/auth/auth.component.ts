@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from './auth.service';
 import { AuthResponseData } from './auth.service'; //import the interface AuthResponseData
+import { AlertComponent } from '../shared/alert.component';
+import { PlaceholderDirective } from '../shared/placeholder.directive';
 //////////////////286.How authentication works
 //1.(286)Client send auth data to the server.Server is Restful Api and it dont know the client(not care about client).Client-server communicate through http:HttpClient req/res. So 1st we check on the client side validation of the credentials(validation of username and password), and this auth data we send to the server.The server also check if the username and password are valid and if the are valied, the server create Token (with secret algoritams) and send that token to the client.That Token is encoded JSON String(not encripted).Client stores that Token in the Stogare(In the Browser's Local Storage).And this token will be attached on any request(attached on the header like query params itn..) send to the server and these request must be authenticated/authorize.
 //////////////////287. Adding the Auth Page
@@ -13,7 +15,11 @@ import { AuthResponseData } from './auth.service'; //import the interface AuthRe
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
+//////////////313. Creating a Component Programmatically
+//we can access to this Placeholder directive with @ViewChild('selector...localReference or we can pass here a type t.e. name of the directive(and @VieChild will find that place-element in the dom with thid directive)')
+@ViewChild(PlaceholderDirective) alertHost:PlaceholderDirective  //awe can store this in a alertHost property becaus this is the place-element where we can host our alert.alertHost: is of type PlaceholderDirectfive
+private closeSub: Subscription; //because EventEmitter is based on the Subject (ando so that have the same type of :Subscription)
 ///////////////288. Switching Between Auth Modes
 //1.(288)to can swithch between auth modes(login and logout), here in auth comp ts we neet to manage the currently active mode.So lets create a property isLoginMode (boolean) and its initialy set to true
   isLoginMode = true; //initialy set to true
@@ -21,14 +27,16 @@ export class AuthComponent implements OnInit {
 //3.(294)for that here in auth.comp.ts I will create a property isLoading and set to false initialy
   isLoading = false;
   error: string = null; //8.(294)also I want to show error message in alert box if we have an arror t.e. if we have a problem with login.for that I will create error property to store the error:string messagge and initialy set to null
-  constructor(private authService: AuthService, 
-    private router:Router) { }
+  constructor(private authService: AuthService,
+    private router:Router,
+    //here we will create our own component dinamicaly/programaticaly.For that, we need ot inject ComponentFactoryResolver in the constructor()
+    private componentFactoryResolver:ComponentFactoryResolver) { }
 
   ngOnInit(): void {
   }
 //2.(288)I will add method onSwitchMode() (swithicg from login to logout or oposite) which will be oposite of isLoginMode with ! (dinamicaly switching from true to false and oposite) (go to auth.comp.html template)
   onSwitchMode() {
-    //this.isLoginMode = false; 
+    //this.isLoginMode = false;
     this.isLoginMode = !this.isLoginMode;//2.now we need to connect/bind onSwitchMode() and isLogin property with our Template (go to auth.comp.html template)
   }
 //4.(289)add onSubmit() on the ts, and here as argument we expect to receive that form object form:NgForm (import it from @ang/forms)
@@ -36,7 +44,7 @@ export class AuthComponent implements OnInit {
     //console.log(form.value);//console.log the value of the form object
      //form.reset();//after sending/sumbiting the form, reset the form with form.reset() like at the begining with empty fields.
   ///////////////////293. Sending the Signup Request
-  //2.(293)1st we can check if the form is not valid (with !) then this method will not trigger/not fire 
+  //2.(293)1st we can check if the form is not valid (with !) then this method will not trigger/not fire
     if(!form.valid) {
       return; //if the form is not valid, this method will not trigger/not fire
     }
@@ -99,19 +107,58 @@ export class AuthComponent implements OnInit {
       //////////////299. Reflecting the Auth State in the UI
 //1.(299)lets forward user to a different route once the user is authenticate/logged In t.e. redirect the user once the user is authenticate/logged In(we can do in the handleAuthentication() or in the component in subscribe()).I will do that redirection/navigation in the component(in subscribe(only in the success case)), so I need to inject a router:Router
           this.router.navigate(['/recipes']); //programmatic navigation/redirect to '/recipes' route/page (programmatic from our code because that we know when the login is done) (go to header.comp.html)
-        }, 
+        },
     //7(295)here in the component we subscribe() to that throwError(errorMessage) Observable and we know that we get/receive that errorMessage value from the throwError Observable (that errorMessage value that is send/emit/return/throw by throwError observable), because here we subscribe() to that throwError(errorMessage) Observable
         errorMessage => {
           console.log(errorMessage);
           this.error = errorMessage;
+          this.showErrorAlert(errorMessage);
           this.isLoading = false;
         }
     );
 //5'(296)now if we login with the same email and password, in the console we succefuly get back the Response object (..plus with property registered: true;//which means the user is registered in the db with signUp/register logic)
   //5.(239)we can see in the console(if we signUp, switch to signUp) the new registered User object and we can se that registered User in firebase.com -> Authenticate -> Users (Refresh)).But if we input the exactly email and password (or at least the same email) we get an error because thatg User already exists
     form.reset();//after sending/sumbiting the form, reset the form with form.reset() like at the begining with empty fields.
- 
+    ngOnDestroy() {  //we also want to clear/unsubscribe here in ngOnDestroy() if we want to leave/rid of AuthComponent
+      if(this.closeSub) { //if we have an active closeSub:Subscription
+        this.closeSub.unsubscribe();  //then unsubscribe()/clear /unlisten anymore
+      }
+    }
+    private showErrorAlert(message: string) {
+    //////////////////312. Preparing Programmatic Creation (Section: Dynamic Components)
+      //here we will create our own component dinamicaly/programaticaly with code.For that, we need ot inject ComponentFactoryResolver in the constructor()
+     //const alertCmp = new AlertComponent(); //its a valid ts cide, but its not a valid Angular code
+      //with our injected ComponentFactoryResolver service, we can access to the resolve Component Factory() method
+      const alertCmpFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent) //pass in resolveCompFactory(type of the Component t.e. in our case AlertComponent)
+//this alertCmpFactory is an Object/instance(not the Comp) that know how to create the AlertComponent
+//now with that Factory, we can use that to create a concrete Component(dinamicaly).but we need a place to attach that Component to our DOM.we need to inform Angular where we want to attach/add that component (created with that Factory dinamicaly).So go to the .html template
+    ////////////////////313.Creating a Component Programaticaly (comp that created manualy, programaticaly from code)
+////now here we can accss to viewContainerRef of our PlaceHolder directive, because our directive expose/export the ViewContainerRef as a piblic property in the construncor()
+      const hostViewContainerRef = this.alertHost.viewContainerRef;//ViewContainerRef is an Object/Container that refer/point to that place-element in the Dom with which can interact
+    //now we can clear anything that may be rendered here before, befor I render something new
+      hostViewContainerRef.clear(); //clear will clear all angular components that are been rendered in that place before
+    /////now we can use our componentFactory to create our own Alert component(dinamicaly) with code in the hostViewContainerRef
+  //in that place-el of the Dom hostViewContainerRef, in that place createComponent(and pass here alertCmpFactory) ->and this will create a new alert Component(dinamicaly) in that place-element in the DOM
+      const componentRef = hostViewContainerRef.createComponent(alertCmpFactory)
+      ///this comp is created manualy, programaticaly from code
+      ///with this we have created manualy a component trough code
+      /////////////////314. Understanding entryComponents
+      //we need to inform angular that the AlertComponent was created in some place in the DOM, so we need to prepare Angular for this creation, and add this AlertComponent in entrtyComponent:[](because this AlertComponent was created programaticaly/manualy with code without selector or route/path).so go to app.module.ts
+    /////////////////////////////315. Data Binding & Event Binding
+//store this comp in a const componentRef, .instance => access to any instances/properties of this Component that was created here
+      componentRef.instance.message = message //access to message property (of the AlertComponent) = message that we are getting as a string parameter input
+    //now for close we need to manualy listen/subscribe to our close event here.we can with subscribe() and ots ok (this is an exeption,because we have only subscribe on a Subject Obs, but this custom event is just like subject obs because we have created that own event with EventEmitter and @Output in a component wich have own selector)
+    ////subscribe()/listen to our own event 'close'
+      this.closeSub = componentRef.instance.close.subscribe(() => { //here ew need to unsubscribe(), because we do this manualy
+        //here we wanna clear that componentRef
+         this.closeSub.unsubscribe();  //cleaar the subscription*(unsubscribe here), because I know that this component will be removed
+        //and to remove the component, we can use hostViewContainerRef.clear() ->to clear all content that was render here
+          hostViewContainerRef.clear()
+      })
+    /////So this is how to dinamicaly/programaticaly create a Component inside from a code
+    }
   }
+
 /////////////////290. Preparing the Backend
 //1.(290)in our firebase.console project, go to Authentication page -> -> Get started -> set up Sing In method (in Users). before we do that, lets go to the Database(Realtime Database)-> Rules -> and for ".read" and '.write' set 'auth != null' t.e. this: ".read": "auth != null",".write": "auth != null" -> Publish//this will tell firebase, that only authenticate users can read and write our data ;//now if we fetch recipes, we see error in the console(401, nort authorize)
 //2.(290)go back to our firebase.console project, go to Authentication page to enable the authentication and to add some logic to be able to visit our authenticate routes again-> Get started -> set up Sing In method (in Users) ->choose Emial/password -> click Enable(only the 1st one at the top)->Save (now we have firebase biuld-In authentication active, where you can send request to sertain api-endpoint to create Users and logged the users in.//and you can see the Users in the Users tab (Authentication->Users))

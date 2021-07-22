@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './auth/auth.service';
+import { LoggingService } from './logging.service';
 
 @Component({
   selector: 'app-root',   //it has to be unique selector//this is like our own secector tag in index.html (to render the component here in this selector tab)
@@ -19,11 +20,14 @@ export class AppComponent implements OnInit {
   // onNavigate(feature:string) { //we expect to receaive some feature:string as data emitting from the event
   //   this.loadedFeature = feature;
   // }
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+    private loggingService: LoggingService) {}
 //8(303)lets see does does autoLogin() works in ngOnInit hook(it loads first, loads early t.e. runs as soon as the app starts) in app.comp.ts (because that is the component that will first loads when our app start, t.e. runs as soon as the app starts).
 //8.(303)so, implements OnInit interface and in ngOnInit() call autoLogin() from the Auth Service.So inject authService:Auth Service here in constructor()
     ngOnInit() {
       this.authService.autoLogin();
+      ////now call this service in app.component.ts in ngOnInit() with some message string value
+      this.loggingService.printLog('Hello from App component ngOnInit'); //now add the same to shop-list.comp.ts
     }
 
 }
@@ -44,21 +48,24 @@ export class AppComponent implements OnInit {
 
 //component is a Class(Ts class)
 //create a new component: ->1st. create a folder 'server' into the app folder(subfolder that will contain my server component)//its a good practice that all components to be inside/nested in the root components (and folder name=component name)
-//in the 'server' folder (right click->new file)-> create a new file server.component.ts 
+//in the 'server' folder (right click->new file)-> create a new file server.component.ts
 
 //Data binding = communication (communication between .ts code(our business logic) and .html template)
 //Direction: From .ts code to .html template we want some Output data, and in data binding is with String interpolation {{}} or with Property binding [property]="data"
 //Oposite direction: From .html template to .ts code, is when we have react to User Events (e x: when user click button) and that is Event Binding (event)="expression"
 //3rd way is Two-way Data Binding (in both directions) with [(ngModel)]="data"
 
-//Directives => are instructions in the Dom (like selector)//we use the with attribute selector 
+//Directives => are instructions in the Dom (like selector)//we use the with attribute selector
 //Directives (attributes): ngIf, ngFor...
 
 //creating components (direct in the main app folder)=> ng g c repipes and ng g c shopping-list
-//creating nested components in recipe(overall component that will hold the recipes-list on the left and recipes-detail on the right side)=> ng g c recipes/resipes-listng g c recipes/resipes-detail ng g c recipes/resipes-list/resipes-item 
+//creating nested components in recipe(overall component that will hold the recipes-list on the left and recipes-detail on the right side)=> ng g c recipes/resipes-listng g c recipes/resipes-detail ng g c recipes/resipes-list/resipes-item
 //creating nested components in shopping-list => ng g c shopping-list/shopping-edit (for ingredients)
 
 //279. Backend (Firebase) Setup => log in (sign in) on Firebase.console with my google (gmail) account, then create/add new project -> enter project name: ng-course-recipe-book -> next -> checked all and Create new project
 //->then choose Realtime Database -> create Database -> choose realtime database location: Us(us-central1) or Belgium(europe-west1) -> Start in test mode (for now, without authentication(in test mode we can unlimited read and write access without auth..)..but we will add authentication soon in the next section) ->  Enable
 
 //Resolver=>specieal Guard, t.e. it is some code that is run/execute before loading the route, to make sure that the sertain data on this route depends on, is there on the route.add new file recipes-resolver.service.ts
+////////////[Section=Typescript] 449. What & Why?
+//Typescript=>superset of javascript (extends of js, more additional features)
+//typescript =>provide a static type for javascript (ex. var:string) and the name comes from the type. (because js is dinamic type)

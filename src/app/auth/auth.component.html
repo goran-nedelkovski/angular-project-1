@@ -1,14 +1,22 @@
-<!-- <p>auth works!</p> 
-2.(287)lets create the template form of the auth comp/page.(go to app-routing.module.ts)-->
+<!--/we can use our Placeholder directive in the place-element <ng-template> (this el will not be rendered on the DOM, but takes some place on the dom, parses the template, this element its simply remeber by Angular)-->-->
+<ng-template appPlaceholder></ng-template>
+<!-- 2.(287)lets create the template form of the auth comp/page.(go to app-routing.module.ts)--> -->
 <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
-<!--2.(289)with #localReference we can acces to the form object anywhere in the template code(that form object angular creates automaticaly for us with "ngForm")(#authForm, that hold whole my form element)="ngForm";//now we can access to authForm object anywhere in the template-->
-<!--3.(289)for sumbit the form with (ngSubmit)=onSubmit(pass as argument authForm local reference object, t.e. send/submit our entire form trough that authForm local ref object that holds our form(we can pass as argument also authForm.value but here I will submit entire form with authForm as argument))--> 
+
+        <!--2.(289)with #localReference we can acces to the form object anywhere in the template code(that form object angular creates automaticaly for us with "ngForm")(#authForm, that hold whole my form element)="ngForm";//now we can access to authForm object anywhere in the template-->
+<!--3.(289)for sumbit the form with (ngSubmit)=onSubmit(pass as argument authForm local reference object, t.e. send/submit our entire form trough that authForm local ref object that holds our form(we can pass as argument also authForm.value but here I will submit entire form with authForm as argument))-->
 <!--9.(924)add new div.alert.alert-danger (with alert classes to show nice alert view of the error message) and in p tag we output in {{}} that error message text property. but first check if error is set(if error property exist t.e. if we have some error message)-->
 <div class="alert alert-danger" *ngIf="error">
     <p>{{error}}</p>
 </div>
-<!--7.(294)if we are loading the spinner(if="isLoading"), then I want to show the spinner(we can the same with if-else in the form element).so I will add div elemtn and in this div, I will add the selector tag of the spiineer(here the spinner will render/loads in this selector tag)-->
+<div #addHere></div>
+<!--//with @VieChild('selector localReference') we could access to this el, but its now work like this.
+////////Angular needs a ViewContainerRef()->that is a object/container will give Angular a reference/pointer to the place of the DOM to which it can interact with
+//to we can access to ViewContainerRef, we need to create a helper-directive Placeholder in the shared folder.So we can create manualy or with command: ng g d shared/placeholder
+////Directive has a @Directive({selector: [a]})->with attribute selector, so we can add our Directive as attribute in any html element-->
+<!--7.(294)if we are loading the spinner(if="isLoading"), then I want to show the spinner(we can the same with if-else in the form element).so I will add div elemtn and in this div, I will add the selector tag of the spiineer(here the spinner will render/loads in this selector tag)
+///we can use our Placeholder directive in the place-element <ng-template> (this el will not be rendered on the DOM, but takes some place on the dom)-->
 <div *ngIf="isLoading" style="text-align: center;">
     <app-loading-spinner></app-loading-spinner>
 </div>
@@ -19,10 +27,10 @@
 1.(289)on each input elements, 1st add ngModel, 2nd add name="email", 3rd add 'required' for validate of this fields(must be filled, t.e. mustg not be empty), and 4th add 'email' validator-->
             <div class="form-group">
                 <label for="email">E-mail:</label>
-                <input 
+                <input
                 type="email"
-                class="form-control" 
-                id="email" 
+                class="form-control"
+                id="email"
                 ngModel
                 name="email"
                 required>
@@ -30,9 +38,9 @@
 <!--1.(289)on each input elements, 1st add ngModel, 2nd add name="password", 3rd add 'required' for validate of this fields(must be filled, t.e. mustg not be empty), and 4th add 'minLength'="6" validator-->
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input 
-                type="password" 
-                id="password" 
+                <input
+                type="password"
+                id="password"
                 class="form-control"
                 ngModel
                 name="password"
@@ -42,12 +50,12 @@
             <div>
         <!--4.(288)here in 1st button we want to output dinamic text('login' or 'SignnUp') with sring interpolation {{and here with Ternary operator we can check if isLoginMode === true ? 'Login' : 'SignUp' //so if we are on LoginMode(if its set to true), then output 'Login' text on the button or if we are not on LoginMode(if its set to false), then output 'SignUp' text on the button}}
         4.(288)on this 1st button add attribute type="submit" because this bitton will submit the form-->
-      <!--3(289)we can use that #local Reference in this 1st button, with directive[disabled] if our form(authForm local Reference) is not valid t.e. [disabled]="!authForm.valid"--> 
-             <button 
-             class="btn btn-primary" 
-             type="submit" 
-             [disabled]="!authForm.valid">{{ isLoginMode ? 'Login' : 'SignUp' }}</button> | 
-        <!--3.(288)on 2nd button add (click)="onSwithcMode() and add type="button"() ->so, doesn't submit the form this button" listener.Add dinamic text ('signUp' or 'login') with ternary operator check, if we are in loginMode, then switch to 'signUp' mode (oposite, with !-negation) and if we are on signUpMode then switch to 'login'--> 
+      <!--3(289)we can use that #local Reference in this 1st button, with directive[disabled] if our form(authForm local Reference) is not valid t.e. [disabled]="!authForm.valid"-->
+             <button
+             class="btn btn-primary"
+             type="submit"
+             [disabled]="!authForm.valid">{{ isLoginMode ? 'Login' : 'SignUp' }}</button> |
+        <!--3.(288)on 2nd button add (click)="onSwithcMode() and add type="button"() ->so, doesn't submit the form this button" listener.Add dinamic text ('signUp' or 'login') with ternary operator check, if we are in loginMode, then switch to 'signUp' mode (oposite, with !-negation) and if we are on signUpMode then switch to 'login'-->
                 <button class="btn btn-primary" (click)="onSwitchMode()">Switch to {{ isLoginMode ? 'SignUp' : 'Login' }}</button>
             </div>
         </form>
